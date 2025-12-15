@@ -231,7 +231,7 @@ systemd_timesyncd:
     poll_interval_min_sec: '32'
     poll_interval_max_sec: '2048'
 
-systemd_journald_settings:
+systemd_journald:
   Storage: 'persistent'
   SystemMaxUse: '10G'
 

@@ -13,14 +13,13 @@
     file: "deploy.d/deploy_logind.yml"
   when:
     - "vars['systemd_logind_logind'] is defined"
-    - "vars['systemd_logind_logind'] != []"
+    - "vars['systemd_logind_logind'] not in ['', [], None]"
 - name: "systemd_helper | Include deploy tasks for systemd-journald"
   ansible.builtin.include_tasks:
     file: "deploy.d/deploy_journald.yml"
   when:
-    - "hostvars[inventory_hostname]['systemd_journald_settings'] is defined"
-    - "hostvars[inventory_hostname]['systemd_journald_settings'] not in
-      ['', [], None]"
+    - "vars['systemd_journald_settings'] is defined"
+    - "vars['systemd_journald_settings'] not in ['', [], None]"
 - name: "systemd_helper | Include deploy tasks for systemd-timesyncd"
   ansible.builtin.include_tasks:
     file: "deploy.d/deploy_timesyncd.yml"

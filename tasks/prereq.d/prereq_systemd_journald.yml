@@ -1,0 +1,5 @@
+---
+- name: "systemd_helper | Set facts about journald"
+  ansible.builtin.set_fact:
+    systemd_journald_settings:
+      "{{ hostvars[inventory_hostname]['systemd_journald'] }}"
