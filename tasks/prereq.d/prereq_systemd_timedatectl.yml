@@ -11,4 +11,4 @@
   community.general.timezone:
     name: "{{ vars['systemd_timedatectl_timezone'] | join() }}"
   when:
-    - "vars['systemd_timedatectl_timezone'] not in ['', [], None]"
+    - "vars['systemd_timedatectl_timezone'] not in ['', [], '[]', None]"

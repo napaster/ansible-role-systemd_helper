@@ -4,7 +4,7 @@
 
 {{ '[Journal]' }}
 {% for k,v in vars['systemd_journald_settings'].items() %}
-{% if v is defined and v not in ['', [], None] %}
+{% if v is defined and v not in ['', [], '[]', None] %}
 {{ k + '=' + v }}
 {% endif %}
 {% endfor %}

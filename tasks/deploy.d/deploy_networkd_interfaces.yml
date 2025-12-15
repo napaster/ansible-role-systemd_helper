@@ -27,4 +27,4 @@
       outer_item_vlan['name'] }}"
   when:
     - "outer_item_vlan['macvlans'] is defined"
-    - "outer_item_vlan['macvlans'] not in ['', [], None]"
+    - "outer_item_vlan['macvlans'] not in ['', [], '[]', None]"

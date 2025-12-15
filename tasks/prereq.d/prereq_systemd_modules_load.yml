@@ -22,7 +22,7 @@
   register: "modules_load_find_result"
   when:
     - "vars['systemd_modules_load_create'] is defined"
-    - "vars['systemd_modules_load_create'] not in ['', [], None]"
+    - "vars['systemd_modules_load_create'] not in ['', [], '[]', None]"
     - "hostvars[inventory_hostname]['systemd_modules_load'] |
        community.general.json_query(vars['modules_load_drop_exists']) is
        defined"

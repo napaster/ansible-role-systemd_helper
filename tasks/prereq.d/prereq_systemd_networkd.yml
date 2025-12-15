@@ -25,8 +25,8 @@
       ansible.builtin.unique() }}"
   when:
     - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
-    - "hostvars[inventory_hostname]['systemd_networkd'] != ''"
-    - "hostvars[inventory_hostname]['systemd_networkd'] != []"
+    - "hostvars[inventory_hostname]['systemd_networkd'] not in
+      ['', [], '[]', None]"
 - name: "systemd_helper | Make networkd all interfaces list"
   ansible.builtin.set_fact:
     systemd_networkd_interfaces_list:
@@ -47,7 +47,8 @@
   register: "networkd_find_result"
   when:
     - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
-    - "hostvars[inventory_hostname]['systemd_networkd'] != ''"
+    - "hostvars[inventory_hostname]['systemd_networkd'] not in
+      ['', [], '[]', None]"
     - "hostvars[inventory_hostname]['systemd_networkd'] |
        community.general.json_query(vars['networkd_drop_exists']) is defined"
     - "hostvars[inventory_hostname]['systemd_networkd'] |

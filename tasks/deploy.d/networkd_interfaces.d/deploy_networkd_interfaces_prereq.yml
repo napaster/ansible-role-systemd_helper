@@ -13,7 +13,7 @@
   ansible.builtin.assert:
     that:
       - "item['physaddr'] is defined"
-      - "item['physaddr'] not in ['', [], None]"
+      - "item['physaddr'] not in ['', [], '[]', None]"
     fail_msg: "{{ 'physaddr for ' ~ vars['outer_item'] ~ ' is not defined' }}"
     quiet: "true"
   loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
@@ -26,7 +26,7 @@
     - "item['type'] == 'ether'"
     - "item['match_override'] is not defined or (
       item['match_override'] is defined and item['match_override']
-      in ['', [], None])"
+      in ['', [], '[]', None])"
 - name: "systemd_helper | Assert that physaddr for interface is valid hwaddr"
   ansible.builtin.assert:
     that:
@@ -46,4 +46,4 @@
     - "item['type'] == 'ether'"
     - "item['match_override'] is not defined or (
       item['match_override'] is defined and
-      item['match_override'] in ['', [], None])"
+      item['match_override'] in ['', [], '[]', None])"
