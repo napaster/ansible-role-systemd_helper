@@ -6,9 +6,11 @@
     flatten(levels=1) }}"
   loop_control:
     loop_var: "outer_item"
-  when: "vars['systemd_tmpfiles_create'] is defined"
   vars:
     query_type: "create"
+  when:
+    - "lookup('ansible.builtin.vars', 'systemd_tmpfiles_create', default='')
+      not in ['', [], '[]', None]"
 - name: "systemd_helper | Include systemd-tmpfiles deployment tasks [clean]"
   ansible.builtin.include_tasks:
     file: "deploy.d/deploy_tmpfiles.yml"
@@ -16,9 +18,11 @@
     flatten(levels=1) }}"
   loop_control:
     loop_var: "outer_item"
-  when: "vars['systemd_tmpfiles_clean'] is defined"
   vars:
     query_type: "clean"
+  when:
+    - "lookup('ansible.builtin.vars', 'systemd_tmpfiles_clean', default='')
+      not in ['', [], '[]', None]"
 - name: "systemd_helper | Include systemd-tmpfiles deployment tasks [remove]"
   ansible.builtin.include_tasks:
     file: "deploy.d/deploy_tmpfiles.yml"
@@ -26,6 +30,8 @@
     flatten(levels=1) }}"
   loop_control:
     loop_var: "outer_item"
-  when: "vars['systemd_tmpfiles_remove'] is defined"
   vars:
     query_type: "remove"
+  when:
+    - "lookup('ansible.builtin.vars', 'systemd_tmpfiles_remove', default='')
+      not in ['', [], '[]', None]"

@@ -1,10 +1,11 @@
 {{ '[PFIFO]' }}
-{% if bp.parent is defined and bp.parent != '' %}
-{{ 'Parent=' ~ bp.parent }}
+{% if bp['parent'] is defined and bp['parent'] not in ['', [], '[]', None] %}
+{{ 'Parent=' ~ bp['parent'] }}
 {% endif %}
-{% if bp.handle is defined and bp.handle != '' %}
-{{ 'Handle=' ~ bp.handle }}
+{% if bp['handle'] is defined and bp['handle'] not in ['', [], '[]', None] %}
+{{ 'Handle=' ~ bp['handle'] }}
 {% endif %}
-{% if bp.packet_limit is defined and bp.packet_limit != '' %}
-{{ 'PacketLimit=' ~ bp.packet_limit }}
+{% if bp['packet_limit'] is defined and bp['packet_limit']
+  not in ['', [], '[]', None] %}
+{{ 'PacketLimit=' ~ bp['packet_limit'] }}
 {% endif %}

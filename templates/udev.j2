@@ -3,7 +3,7 @@
 {{ '# Do not edit manually' }}
 
 {% for r in item['rules'] %}
-{% if r is defined and r != '' %}
+{% if r is defined and r not in ['', [], '[]', None] %}
 {{ r }}
 {% endif %}
 {% endfor %}

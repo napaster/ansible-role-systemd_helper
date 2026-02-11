@@ -8,19 +8,22 @@
     path: "/etc/resolv.conf"
     state: "absent"
   when:
-    - "vars['systemd_resolv_link_stat']['stat']['exists']"
-    - "vars['systemd_resolv_link_stat']['stat']['islnk'] is defined"
-    - "not vars['systemd_resolv_link_stat']['stat']['islnk']"
+    - "lookup('ansible.builtin.vars',
+      'systemd_resolv_link_stat')['stat']['exists']"
+    - "not lookup('ansible.builtin.vars',
+      'systemd_resolv_link_stat')['stat']['islnk']"
 - name: "systemd_helper | Delete resolv.conf because is wrong link"
   ansible.builtin.file:
     path: "/etc/resolv.conf"
     state: "absent"
   when:
-    - "(vars['systemd_resolv_link_stat']['stat']['exists'] and
-      vars['systemd_resolv_link_stat']['stat']['islnk'] is defined)"
-    - "(vars['systemd_resolv_link_stat']['stat']['islnk'] and
-      vars['systemd_resolv_link_stat']['stat']['lnk_target'] !=
-      '/var/run/systemd/resolve/resolv.conf')"
+    - "lookup('ansible.builtin.vars',
+      'systemd_resolv_link_stat')['stat']['exists']"
+    - "lookup('ansible.builtin.vars',
+      'systemd_resolv_link_stat')['stat']['islnk']"
+    - "lookup('ansible.builtin.vars',
+      'systemd_resolv_link_stat')['stat']['lnk_target'] !=
+      '/var/run/systemd/resolve/resolv.conf'"
 - name: "systemd_helper | Make symlink for systemd-resolved"
   ansible.builtin.file:
     src: "/var/run/systemd/resolve/resolv.conf"

@@ -12,27 +12,24 @@
       "{{ hostvars[inventory_hostname]['systemd_networkd'] |
       community.general.json_query('[].networkd[]') }}"
     systemd_networkd_interfaces:
-      "{{ hostvars[inventory_hostname]['systemd_networkd'] |
-      community.general.json_query('[].interfaces[].interface') |
+      "{{ (hostvars[inventory_hostname]['systemd_networkd'] |
+      community.general.json_query('[].interfaces[].interface')) |
       ansible.builtin.unique() }}"
     systemd_networkd_vlans:
-      "{{ hostvars[inventory_hostname]['systemd_networkd'] |
-      community.general.json_query('[].interfaces[].vlans[].name') |
+      "{{ (hostvars[inventory_hostname]['systemd_networkd'] |
+      community.general.json_query('[].interfaces[].vlans[].name')) |
       ansible.builtin.unique() }}"
     systemd_networkd_macvlans:
-      "{{ hostvars[inventory_hostname]['systemd_networkd'] |
-      community.general.json_query('[].interfaces[].vlans[].macvlans[].name') |
+      "{{ (hostvars[inventory_hostname]['systemd_networkd'] |
+      community.general.json_query('[].interfaces[].vlans[].macvlans[].name')) |
       ansible.builtin.unique() }}"
-  when:
-    - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
-    - "hostvars[inventory_hostname]['systemd_networkd'] not in
-      ['', [], '[]', None]"
 - name: "systemd_helper | Make networkd all interfaces list"
   ansible.builtin.set_fact:
-    systemd_networkd_interfaces_list:
-      "{{ ((vars['systemd_networkd_interfaces'] | default([])) +
-      (vars['systemd_networkd_vlans'] | default([])) +
-      (vars['systemd_networkd_macvlans'] | default([])) | default([])) }}"
+    systemd_networkd_interfaces_list: "{{ lookup('ansible.builtin.vars',
+      'systemd_networkd_interfaces', default=[]) +
+      lookup('ansible.builtin.vars', 'systemd_networkd_vlans', default=[]) +
+      lookup('ansible.builtin.vars', 'systemd_networkd_macvlans',
+      default=[]) }}"
 - name: "systemd_helper | Find exists networkd configuration files"
   ansible.builtin.find:
     paths: "/etc/systemd/network"
@@ -40,47 +37,44 @@
     file_type: "file"
     use_regex: "yes"
     patterns: "(.*).(network|netdev|link)"
-    ## noqa: jinja[invalid]
-    excludes: "{{ exclude_systemd_networkd_interfaces_network +
-      exclude_systemd_networkd_interfaces_netdev +
-      exclude_systemd_networkd_interfaces_link + ['99-default.link'] }}"
-  register: "networkd_find_result"
+    excludes: "{{ (lookup('ansible.builtin.vars',
+      'systemd_networkd_exclude_interfaces_network', default=[]) +
+      lookup('ansible.builtin.vars',
+      'systemd_networkd_exclude_interfaces_netdev', default=[]) +
+      lookup('ansible.builtin.vars', 'systemd_networkd_exclude_interfaces_link',
+      default=[])) + ['99-default.link'] }}"
+  register: "systemd_networkd_find_result"
   when:
-    - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
-    - "hostvars[inventory_hostname]['systemd_networkd'] not in
-      ['', [], '[]', None]"
     - "hostvars[inventory_hostname]['systemd_networkd'] |
-       community.general.json_query(vars['networkd_drop_exists']) is defined"
-    - "hostvars[inventory_hostname]['systemd_networkd'] |
-       community.general.json_query(vars['networkd_drop_exists']) == 'true'"
-    - "exclude_systemd_networkd_interfaces_network != []"
-    - "exclude_systemd_networkd_interfaces_netdev != []"
-    - "exclude_systemd_networkd_interfaces_link != []"
+       community.general.json_query(lookup('ansible.builtin.vars',
+      'systemd_networkd_drop_exists', default='')) == 'true'"
   vars:
-    networkd_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
-    exclude_systemd_networkd_interfaces_network:
-      "{{ (vars['systemd_networkd_interfaces_list'] |
-      map('regex_replace', '^(.*)$', '\\1.network') | list() | default([])) }}"
-    exclude_systemd_networkd_interfaces_netdev:
-      "{{ (vars['systemd_networkd_interfaces_list'] |
-      map('regex_replace', '^(.*)$', '\\1.netdev') | list() | default([])) }}"
-    exclude_systemd_networkd_interfaces_link:
-      "{{ (vars['systemd_networkd_interfaces_list'] |
-      map('regex_replace', '^(.*)$', '\\1.link') | list() | default([])) }}"
+    systemd_networkd_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
+    systemd_networkd_exclude_interfaces_network:
+      "{{ lookup('ansible.builtin.vars', 'systemd_networkd_interfaces_list',
+      default=[]) | map('regex_replace', '^(.*)$', '\\1.network') | list() }}"
+    systemd_networkd_exclude_interfaces_netdev:
+      "{{ lookup('ansible.builtin.vars', 'systemd_networkd_interfaces_list',
+      default=[]) | map('regex_replace', '^(.*)$', '\\1.netdev') | list() }}"
+    systemd_networkd_exclude_interfaces_link:
+      "{{ lookup('ansible.builtin.vars', 'systemd_networkd_interfaces_list',
+      default=[]) | map('regex_replace', '^(.*)$', '\\1.link') | list() }}"
 - name: "systemd_helper | Delete exists networkd configuration files"
   ansible.builtin.file:
-    path: "{{ interface['path'] }}"
+    path: "{{ systemd_networkd_interface['path'] }}"
     state: "absent"
-  loop: "{{ vars['networkd_find_result']['files'] | flatten(levels=1) }}"
+  loop: "{{ lookup('ansible.builtin.vars',
+    'systemd_networkd_find_result')['files'] | flatten(levels=1) }}"
   loop_control:
-    loop_var: "interface"
-    label: "{{ 'Remove file: ' + interface['path'] }}"
+    loop_var: "systemd_networkd_interface"
+    label: "{{ 'Remove file: ' + systemd_networkd_interface['path'] }}"
   when:
-    - "vars['networkd_find_result']['files'] is defined"
+    - "lookup('ansible.builtin.vars',
+      'systemd_networkd_find_result')['files'] is defined"
 - name: "systemd_helper | Stat default networkd link settings"
   ansible.builtin.stat:
     path: "/etc/systemd/network/99-default.link"
-  register: "systemd_default_link_stat"
+  register: "systemd_networkd_default_link_stat"
 - name: "systemd_helper | Mask default networkd link"
   ansible.builtin.file:
     path: "/etc/systemd/network/99-default.link"
@@ -89,4 +83,5 @@
     mode: "0644"
     state: "touch"
   when:
-    - "not vars['systemd_default_link_stat']['stat']['exists']"
+    - "not lookup('ansible.builtin.vars',
+      'systemd_networkd_default_link_stat')['stat']['exists']"

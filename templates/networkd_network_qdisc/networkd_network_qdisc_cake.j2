@@ -1,13 +1,15 @@
 {{ '[CAKE]' }}
-{% if bc.parent is defined and bc.parent != '' %}
-{{ 'Parent=' ~ bc.parent }}
+{% if bc['parent'] is defined and bc['parent'] not in ['', [], '[]', None] %}
+{{ 'Parent=' ~ bc['parent'] }}
 {% endif %}
-{% if bc.handle is defined and bc.handle != '' %}
-{{ 'Handle=' ~ bc.handle }}
+{% if bc['handle'] is defined and bc['handle'] not in ['', [], '[]', None] %}
+{{ 'Handle=' ~ bc['handle'] }}
 {% endif %}
-{% if bc.overhead is defined and bc.overhead != '' %}
-{{ 'Overhead=' ~ bc.overhead }}
+{% if bc['overhead'] is defined and bc['overhead']
+  not in ['', [], '[]', None] %}
+{{ 'Overhead=' ~ bc['overhead'] }}
 {% endif %}
-{% if bc.bandwidth is defined and bc.bandwidth != '' %}
-{{ 'Bandwidth=' ~ bc.bandwidth }}
+{% if bc['bandwidth'] is defined and bc['bandwidth']
+  not in ['', [], '[]', None] %}
+{{ 'Bandwidth=' ~ bc['bandwidth'] }}
 {% endif %}

@@ -1,7 +1,8 @@
 {{ '[NextHop]' }}
-{% if ip.gateway is defined and ip.gateway | ansible.utils.ipaddr('host') %}
-{{ 'Gateway=' + ip.gateway }}
-{% if ip.id is defined and ip.id != '' %}
-{{ 'Id=' ~ ip.id }}
+{% if ip['gateway'] is defined and (ip.gateway |
+  ansible.utils.ipaddr('host')) %}
+{{ 'Gateway=' + ip['gateway'] }}
+{% if ip['id'] is defined and ip['id'] not in ['', [], '[]', None] %}
+{{ 'Id=' ~ ip['id'] }}
 {% endif %}
 {% endif %}

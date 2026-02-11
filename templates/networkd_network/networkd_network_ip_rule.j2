@@ -1,44 +1,45 @@
 {{ '[RoutingPolicyRule]' }}
-{% if ip.tos is defined and ip.tos != '' %}
-{{ 'TypeOfService=' ~ ip.tos }}
+{% if ip['tos'] is defined and ip['tos'] not in ['', [], '[]', None] %}
+{{ 'TypeOfService=' ~ ip['tos'] }}
 {% endif %}
-{% if ip.from is defined and ip.from | ansible.utils.ipaddr() %}
-{{ 'From=' + ip.from }}
+{% if ip['from'] is defined and ip['from'] | ansible.utils.ipaddr() %}
+{{ 'From=' + ip['from'] }}
 {% endif %}
-{% if ip.to is defined and ip.to | ansible.utils.ipaddr() %}
-{{ 'To=' + ip.to }}
+{% if ip['to'] is defined and ip['to'] | ansible.utils.ipaddr() %}
+{{ 'To=' + ip['to'] }}
 {% endif %}
-{% if ip.fwmark is defined and ip.fwmark != '' %}
-{{ 'FirewallMark=' ~ ip.fwmark }}
+{% if ip['fwmark'] is defined and ip['fwmark'] not in ['', [], '[]', None] %}
+{{ 'FirewallMark=' ~ ip['fwmark'] }}
 {% endif %}
-{% if ip.table is defined and ip.table != '' %}
-{{ 'Table=' ~ ip.table }}
+{% if ip['table'] is defined and ip['table'] not in ['', [], '[]', None] %}
+{{ 'Table=' ~ ip['table'] }}
 {% endif %}
-{% if ip.prio is defined and ip.prio != '' %}
-{{ 'Priority=' ~ ip.prio }}
+{% if ip['prio'] is defined and ip['prio'] not in ['', [], '[]', None] %}
+{{ 'Priority=' ~ ip['prio'] }}
 {% endif %}
-{% if ip.iif is defined and ip.iif != '' %}
-{{ 'IncomingInterface=' ~ ip.iif }}
+{% if ip['iif'] is defined and ip['iif'] not in ['', [], '[]', None] %}
+{{ 'IncomingInterface=' ~ ip['iif'] }}
 {% endif %}
-{% if ip.oif is defined and ip.oif != '' %}
-{{ 'OutgoingInterface=' ~ ip.oif }}
+{% if ip['oif'] is defined and ip['oif'] not in ['', [], '[]', None] %}
+{{ 'OutgoingInterface=' ~ ip['oif'] }}
 {% endif %}
-{% if ip.sport is defined and ip.sport != '' %}
-{{ 'SourcePort=' ~ ip.sport }}
+{% if ip['sport'] is defined and ip['sport'] not in ['', [], '[]', None] %}
+{{ 'SourcePort=' ~ ip['sport'] }}
 {% endif %}
-{% if ip.dport is defined and ip.dport != '' %}
-{{ 'DestinationPort=' ~ ip.dport }}
+{% if ip['dport'] is defined and ip['dport'] not in ['', [], '[]', None] %}
+{{ 'DestinationPort=' ~ ip['dport'] }}
 {% endif %}
-{% if ip.ip_proto is defined and ip.ip_proto != '' %}
-{{ 'IPProtocol=' ~ ip.ip_proto }}
+{% if ip['ip_proto'] is defined and ip['ip_proto']
+  not in ['', [], '[]', None] %}
+{{ 'IPProtocol=' ~ ip['ip_proto'] }}
 {% endif %}
-{% if ip.invert_rule is defined and ip.invert_rule in ['true', 'false'] %}
-{{ 'InvertRule=' + ip.invert_rule }}
+{% if ip['invert_rule'] is defined and ip['invert_rule'] in ['true', 'false'] %}
+{{ 'InvertRule=' + ip['invert_rule'] }}
 {% endif %}
-{% if ip.family is defined and ip.family in ['ipv4', 'ipv6', 'both'] %}
-{{ 'Family=' + ip.family }}
+{% if ip['family'] is defined and ip['family'] in ['ipv4', 'ipv6', 'both'] %}
+{{ 'Family=' + ip['family'] }}
 {% endif %}
-{% if ip.suppress_prefix_length is defined and
-  ip.suppress_prefix_length != '' %}
-{{ 'SuppressPrefixLength=' ~ ip.suppress_prefix_length }}
+{% if ip['suppress_prefix_length'] is defined and
+  ip['suppress_prefix_length'] not in ['', [], '[]', None] %}
+{{ 'SuppressPrefixLength=' ~ ip['suppress_prefix_length'] }}
 {% endif %}

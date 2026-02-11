@@ -8,5 +8,6 @@
     mode: "0755"
 - name: "systemd_helper | Set facts about udev"
   ansible.builtin.set_fact:
-    systemd_udev_rules: "{{ hostvars[inventory_hostname]['systemd_udev'] |
-      community.general.json_query('[].file_name') }}"
+    systemd_udev_rules: "{{ (hostvars[inventory_hostname]['systemd_udev'] |
+      community.general.json_query('[].file_name')) |
+      ansible.builtin.unique() }}"

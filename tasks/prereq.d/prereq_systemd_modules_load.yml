@@ -9,8 +9,9 @@
 - name: "systemd_helper | Set facts about modules-load.d"
   ansible.builtin.set_fact:
     systemd_modules_load_create:
-      "{{ hostvars[inventory_hostname]['systemd_modules_load'] |
-      community.general.json_query('[].modules_load[].file_name') }}"
+      "{{ (hostvars[inventory_hostname]['systemd_modules_load'] |
+      community.general.json_query('[].modules_load[].file_name')) |
+      ansible.builtin.unique() }}"
 - name: "systemd_helper | Find exists modules-load configuration files"
   ansible.builtin.find:
     paths: "/etc/modules-load.d"
@@ -18,27 +19,30 @@
     file_type: "file"
     patterns: "(.*).conf"
     use_regex: "yes"
-    excludes: "{{ exclude_systemd_modules_load_create | default('[]') }}"
-  register: "modules_load_find_result"
+    excludes: "{{ lookup('ansible.builtin.vars',
+      'systemd_helper_exclude_modules_load_create') }}"
+  register: "systemd_helper_modules_load_find_result"
   when:
-    - "vars['systemd_modules_load_create'] is defined"
-    - "vars['systemd_modules_load_create'] not in ['', [], '[]', None]"
+    - "lookup('ansible.builtin.vars', 'systemd_modules_load_create',
+      default='') not in ['', [], '[]', None]"
     - "hostvars[inventory_hostname]['systemd_modules_load'] |
-       community.general.json_query(vars['modules_load_drop_exists']) is
-       defined"
-    - "hostvars[inventory_hostname]['systemd_modules_load'] |
-       community.general.json_query(vars['modules_load_drop_exists']) == 'true'"
+       community.general.json_query(lookup('ansible.builtin.vars',
+      'systemd_modules_load_drop_exists', default='')) == 'true'"
   vars:
-    modules_load_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
-    exclude_systemd_modules_load_create:
-      "{{ ((vars['systemd_modules_load_create'] |
-      map('regex_replace', '^(.*)$', '\\1.conf')) | list()) | default([]) }}"
+    systemd_modules_load_drop_exists: "[] | map(&drop_exists || 'false', @) |
+      [0]"
+    systemd_helper_exclude_modules_load_create:
+      "{{ lookup('ansible.builtin.vars', 'systemd_modules_load_create',
+      default=[]) | map('regex_replace', '^(.*)$', '\\1.conf') | list() }}"
 - name: "systemd_helper | Delete exists modules-load configuration files"
   ansible.builtin.file:
-    path: "{{ item['path'] }}"
+    path: "{{ systemd_modules_load_file['path'] }}"
     state: "absent"
-  loop: "{{ vars['modules_load_find_result']['files'] | flatten(levels=1) }}"
+  loop: "{{ lookup('ansible.builtin.vars',
+    'systemd_helper_modules_load_find_result')['files'] | flatten(levels=1) }}"
   loop_control:
-    label: "{{ item['path'] }}"
+    loop_var: "systemd_modules_load_file"
+    label: "{{ 'Remove ' + systemd_modules_load_file['path'] }}"
   when:
-    - "vars['modules_load_find_result']['files'] is defined"
+    - "lookup('ansible.builtin.vars',
+      'systemd_helper_modules_load_find_result')['files'] is defined"

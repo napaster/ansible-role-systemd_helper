@@ -3,7 +3,8 @@
 {{ '# Do not edit manually' }}
 
 {{ '[Journal]' }}
-{% for k,v in vars['systemd_journald_settings'].items() %}
+{% for k,v in lookup('ansible.builtin.vars',
+  'systemd_journald_settings').items() %}
 {% if v is defined and v not in ['', [], '[]', None] %}
 {{ k + '=' + v }}
 {% endif %}

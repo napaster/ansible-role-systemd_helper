@@ -1,10 +1,11 @@
 {{ '[StochasticFairBlue]' }}
-{% if bsb.parent is defined and bsb.parent != '' %}
-{{ 'Parent=' ~ bsb.parent }}
+{% if bsb['parent'] is defined and bsb['parent'] not in ['', [], '[]', None] %}
+{{ 'Parent=' ~ bsb['parent'] }}
 {% endif %}
-{% if bsb.handle is defined and bsb.handle != '' %}
-{{ 'Handle=' ~ bsb.handle }}
+{% if bsb['handle'] is defined and bsb['handle'] not in ['', [], '[]', None] %}
+{{ 'Handle=' ~ bsb['handle'] }}
 {% endif %}
-{% if bsb.packet_limit is defined and bsb.packet_limit != '' %}
-{{ 'PacketLimit=' ~ bsb.packet_limit }}
+{% if bsb['packet_limit'] is defined and bsb['packet_limit']
+  not in ['', [], '[]', None] %}
+{{ 'PacketLimit=' ~ bsb['packet_limit'] }}
 {% endif %}

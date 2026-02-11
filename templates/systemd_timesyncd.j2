@@ -3,18 +3,18 @@
 {{ '# Do not edit manually' }}
 
 {{ '[Time]' }}
-{% for t in vars['systemd_timedatectl_timesyncd'] %}
-{% if t.ntp is defined and t.ntp != '' %}
-{% if t.ntp is string %}
-{{ 'NTP=' + t.ntp }}
-{% elif t.ntp is sequence %}
-{% for addr in t.ntp %}
-{% if addr != '' %}
-{% if loop.first %}
+{% for t in lookup('ansible.builtin.vars', 'systemd_timedatectl_timesyncd') %}
+{% if t['ntp'] is defined and t['ntp'] not in ['', [], '[]', None] %}
+{% if t['ntp'] is string %}
+{{ 'NTP=' + t['ntp'] }}
+{% elif t['ntp'] is sequence %}
+{% for addr in t['ntp'] %}
+{% if addr not in ['', [], '[]', None] %}
+{% if loop['first'] %}
 {{ 'NTP' + '=' -}}
 {% endif %}
 {{ addr -}}
-{% if not loop.last %}
+{% if not loop['last'] %}
 {{ ' ' -}}
 {% else %}
 {{ '' }}
@@ -23,17 +23,17 @@
 {% endfor %}
 {% endif %}
 {% endif %}
-{% if t.fallback is defined and t.fallback != '' %}
-{% if t.fallback is string %}
-{{ 'FallbackNTP=' + t.fallback }}
-{% elif t.fallback is sequence %}
-{% for addr in t.fallback %}
-{% if addr != '' %}
-{% if loop.first %}
+{% if t['fallback'] is defined and t['fallback'] not in ['', [], '[]', None] %}
+{% if t['fallback'] is string %}
+{{ 'FallbackNTP=' + t['fallback'] }}
+{% elif t['fallback'] is sequence %}
+{% for addr in t['fallback'] %}
+{% if addr not in ['', [], '[]', None] %}
+{% if loop['first'] %}
 {{ 'FallbackNTP' + '=' -}}
 {% endif %}
 {{ addr -}}
-{% if not loop.last %}
+{% if not loop['last'] %}
 {{ ' ' -}}
 {% else %}
 {{ '' }}
@@ -42,17 +42,17 @@
 {% endfor %}
 {% endif %}
 {% endif %}
-{% if t.fallback is defined and t.fallback != '' %}
-{% if t.fallback is string %}
-{{ 'FallbackNTP=' + t.fallback }}
-{% elif t.fallback is sequence %}
-{% for addr in t.fallback %}
-{% if addr != '' %}
-{% if loop.first %}
+{% if t['fallback'] is defined and t['fallback'] not in ['', [], '[]', None] %}
+{% if t['fallback'] is string %}
+{{ 'FallbackNTP=' + t['fallback'] }}
+{% elif t['fallback'] is sequence %}
+{% for addr in t['fallback'] %}
+{% if addr not in ['', [], '[]', None] %}
+{% if loop['first'] %}
 {{ 'FallbackNTP' + '=' -}}
 {% endif %}
 {{ addr -}}
-{% if not loop.last %}
+{% if not loop['last'] %}
 {{ ' ' -}}
 {% else %}
 {{ '' }}
@@ -61,13 +61,16 @@
 {% endfor %}
 {% endif %}
 {% endif %}
-{% if t.root_distance_max_sec is defined and t.root_distance_max_sec != '' %}
-{{ 'RootDistanceMaxSec=' ~ t.root_distance_max_sec }}
+{% if t['root_distance_max_sec'] is defined and t['root_distance_max_sec']
+  not in ['', [], '[]', None] %}
+{{ 'RootDistanceMaxSec=' ~ t['root_distance_max_sec'] }}
 {% endif %}
-{% if t.poll_interval_min_sec is defined and t.poll_interval_min_sec != '' %}
-{{ 'PollIntervalMinSec=' ~ t.poll_interval_min_sec }}
+{% if t['poll_interval_min_sec'] is defined and t['poll_interval_min_sec']
+  not in ['', [], '[]', None] %}
+{{ 'PollIntervalMinSec=' ~ t['poll_interval_min_sec'] }}
 {% endif %}
-{% if t.poll_interval_max_sec is defined and t.poll_interval_max_sec != '' %}
-{{ 'PollIntervalMaxSec=' ~ t.poll_interval_max_sec }}
+{% if t['poll_interval_max_sec'] is defined and t['poll_interval_max_sec']
+  not in ['', [], '[]', None] %}
+{{ 'PollIntervalMaxSec=' ~ t['poll_interval_max_sec'] }}
 {% endif %}
 {% endfor %}

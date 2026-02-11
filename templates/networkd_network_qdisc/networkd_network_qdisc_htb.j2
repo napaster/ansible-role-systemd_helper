@@ -1,13 +1,13 @@
 {{ '[HierarchyTokenBucket]' }}
-{% if bh.parent is defined and bh.parent != '' %}
-{{ 'Parent=' ~ bh.parent }}
+{% if bh['parent'] is defined and bh['parent'] not in ['', [], '[]', None] %}
+{{ 'Parent=' ~ bh['parent'] }}
 {% endif %}
-{% if bh.handle is defined and bh.handle != '' %}
-{{ 'Handle=' ~ bh.handle }}
+{% if bh['handle'] is defined and bh['handle'] not in ['', [], '[]', None] %}
+{{ 'Handle=' ~ bh['handle'] }}
 {% endif %}
-{% if bh.default is defined and bh.default != '' %}
-{{ 'DefaultClass=' ~ bh.default }}
+{% if bh['default'] is defined and bh['default'] not in ['', [], '[]', None] %}
+{{ 'DefaultClass=' ~ bh['default'] }}
 {% endif %}
-{% if bh.r2q is defined and bh.r2q != '' %}
-{{ 'RateToQuantum=' ~ bh.r2q }}
+{% if bh['r2q'] is defined and bh['r2q'] not in ['', [], '[]', None] %}
+{{ 'RateToQuantum=' ~ bh['r2q'] }}
 {% endif %}

@@ -1,5 +1,6 @@
 {{ '[VLAN]' }}
-{% if item['vlan_id'] is defined and item['vlan_id'] != '' %}
+{% if item['vlan_id'] is defined and item['vlan_id']
+  not in ['', [], '[]', None] %}
 {{ 'Id=' ~ item['vlan_id'] }}
 {% endif %}
 {% if item['gvrp'] is defined and item['gvrp'] in ['true', 'false'] %}

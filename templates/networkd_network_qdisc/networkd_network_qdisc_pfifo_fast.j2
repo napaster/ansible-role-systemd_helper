@@ -1,7 +1,7 @@
 {{ '[PFIFOFast]' }}
-{% if bpf.parent is defined and bpf.parent != '' %}
-{{ 'Parent=' ~ bpf.parent }}
+{% if bpf['parent'] is defined and bpf['parent'] not in ['', [], '[]', None] %}
+{{ 'Parent=' ~ bpf['parent'] }}
 {% endif %}
-{% if bpf.handle is defined and bpf.handle != '' %}
-{{ 'Handle=' ~ bpf.handle }}
+{% if bpf['handle'] is defined and bpf['handle'] not in ['', [], '[]', None] %}
+{{ 'Handle=' ~ bpf['handle'] }}
 {% endif %}

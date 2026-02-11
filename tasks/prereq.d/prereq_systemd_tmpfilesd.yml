@@ -9,14 +9,17 @@
 - name: "systemd_helper | Set facts about tmpfiles.d"
   ansible.builtin.set_fact:
     systemd_tmpfiles_create:
-      "{{ hostvars[inventory_hostname]['systemd_tmpfiles'] |
-      community.general.json_query('[].create[].file_name') }}"
+      "{{ (hostvars[inventory_hostname]['systemd_tmpfiles'] |
+      community.general.json_query('[].create[].file_name')) |
+      ansible.builtin.unique() }}"
     systemd_tmpfiles_clean:
-      "{{ hostvars[inventory_hostname]['systemd_tmpfiles'] |
-      community.general.json_query('[].clean[].file_name') }}"
+      "{{ (hostvars[inventory_hostname]['systemd_tmpfiles'] |
+      community.general.json_query('[].clean[].file_name')) |
+      ansible.builtin.unique() }}"
     systemd_tmpfiles_remove:
-      "{{ hostvars[inventory_hostname]['systemd_tmpfiles'] |
-      community.general.json_query('[].remove[].file_name') }}"
+      "{{ (hostvars[inventory_hostname]['systemd_tmpfiles'] |
+      community.general.json_query('[].remove[].file_name')) |
+      ansible.builtin.unique() }}"
 - name: "systemd_helper | Find exists tmpfiles configuration files"
   ansible.builtin.find:
     paths: "/etc/tmpfiles.d"
@@ -24,29 +27,35 @@
     file_type: "file"
     use_regex: "yes"
     patterns: "(.*).conf"
-    excludes: "{{ (exclude_systemd_tmpfiles_create +
-      exclude_systemd_tmpfiles_clean + exlucde_systemd_tmpfiles_remove) |
-      default('[]') }}"
+    excludes: "{{ lookup('ansible.builtin.vars',
+      'systemd_tmpfiles_exclude_create') + lookup('ansible.builtin.vars',
+      'systemd_tmpfiles_exclude_clean') + lookup('ansible.builtin.vars',
+      'systemd_tmpfiles_exclude_remove') }}"
   register: "tmpfiles_find_result"
   when:
     - "hostvars[inventory_hostname]['systemd_tmpfiles'] |
-       community.general.json_query(vars['tmpfiles_drop_exists']) is defined"
-    - "hostvars[inventory_hostname]['systemd_tmpfiles'] |
-       community.general.json_query(vars['tmpfiles_drop_exists']) == 'true'"
+       community.general.json_query(lookup('ansible.builtin.vars',
+       'tmpfiles_drop_exists', default='')) == 'true'"
   vars:
     tmpfiles_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
-    exclude_systemd_tmpfiles_create: "{{ ((vars['systemd_tmpfiles_create'] |
-      map('regex_replace', '^(.*)$', '\\1.conf')) | list()) | default([]) }}"
-    exclude_systemd_tmpfiles_clean: "{{ ((vars['systemd_tmpfiles_clean'] |
-      map('regex_replace', '^(.*)$', '\\1.conf')) | list()) | default([]) }}"
-    exlucde_systemd_tmpfiles_remove: "{{ ((vars['systemd_tmpfiles_remove'] |
-      map('regex_replace', '^(.*)$', '\\1.conf')) | list()) | default([]) }}"
+    systemd_tmpfiles_exclude_create: "{{ lookup('ansible.builtin.vars',
+      'systemd_tmpfiles_create', default=[]) | map('regex_replace', '^(.*)$',
+      '\\1.conf') | list() }}"
+    systemd_tmpfiles_exclude_clean: "{{ lookup('ansible.builtin.vars',
+      'systemd_tmpfiles_clean', default=[]) | map('regex_replace', '^(.*)$',
+      '\\1.conf') | list() }}"
+    systemd_tmpfiles_exclude_remove: "{{ lookup('ansible.builtin.vars',
+      'systemd_tmpfiles_remove', default=[]) | map('regex_replace', '^(.*)$',
+      '\\1.conf') | list() }}"
 - name: "systemd_helper | Delete exists tmpfiles configuration files"
   ansible.builtin.file:
-    path: "{{ item['path'] }}"
+    path: "{{ systemd_tmpfiles_file['path'] }}"
     state: "absent"
-  loop: "{{ vars['tmpfiles_find_result']['files'] | flatten(levels=1) }}"
+  loop: "{{ lookup('ansible.builtin.vars', 'tmpfiles_find_result')['files'] |
+    flatten(levels=1) }}"
   loop_control:
-    label: "{{ item['path'] }}"
+    loop_var: "systemd_tmpfiles_file"
+    label: "{{ 'Remove file: ' + systemd_tmpfiles_file['path'] }}"
   when:
-    - "vars['tmpfiles_find_result']['files'] is defined"
+    - "lookup('ansible.builtin.vars', 'tmpfiles_find_result')['files'] is
+      defined"

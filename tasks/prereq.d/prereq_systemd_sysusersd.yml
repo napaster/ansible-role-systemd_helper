@@ -9,8 +9,9 @@
 - name: "systemd_helper | Set facts about sysusers.d"
   ansible.builtin.set_fact:
     systemd_sysusers_create:
-      "{{ hostvars[inventory_hostname]['systemd_sysusers'] |
-      community.general.json_query('[].create[].file_name') }}"
+      "{{ (hostvars[inventory_hostname]['systemd_sysusers'] |
+      community.general.json_query('[].create[].file_name')) |
+      ansible.builtin.unique() }}"
 - name: "systemd_helper | Find exists sysusers configuration files"
   ansible.builtin.find:
     paths: "/etc/sysusers.d"
@@ -18,23 +19,29 @@
     file_type: "file"
     use_regex: "yes"
     patterns: "(.*).conf"
-    excludes: "{{ exclude_systemd_sysusers_create | default('[]') }}"
-  register: "sysusers_find_result"
+    excludes: "{{ lookup('ansible.builtin.vars',
+      'systemd_sysusers_exclude_create') }}"
+  register: "systemd_sysusers_find_result"
   when:
-    - "hostvars[inventory_hostname]['systemd_sysusers'] |
-       community.general.json_query(vars['sysusers_drop_exists']) is defined"
-    - "hostvars[inventory_hostname]['systemd_sysusers'] |
-       community.general.json_query(vars['sysusers_drop_exists']) == 'true'"
+    - "lookup('ansible.builtin.vars', 'systemd_sysusers_exclude_create',
+      default='') not in ['', [], '[]', None]"
+    - "hostvars[inventory_hostname]['systemd_modules_load'] |
+       community.general.json_query(lookup('ansible.builtin.vars',
+      'systemd_sysusers_drop_exists', default='')) == 'true'"
   vars:
-    sysusers_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
-    exclude_systemd_sysusers_create: "{{ vars['systemd_sysusers_create'] |
-      map('regex_replace', '^(.*)$', '\\1.conf') | list() }}"
+    systemd_sysusers_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
+    systemd_sysusers_exclude_create: "{{ lookup('ansible.builtin.vars',
+      'systemd_sysusers_create', default=[]) | map('regex_replace',
+      '^(.*)$', '\\1.conf') | list() }}"
 - name: "systemd_helper | Delete exists sysusers configuration files"
   ansible.builtin.file:
-    path: "{{ item['path'] }}"
+    path: "{{ systemd_sysusers_create_file['path'] }}"
     state: "absent"
-  loop: "{{ vars['sysusers_find_result']['files'] | flatten(levels=1) }}"
+  loop: "{{ lookup('ansible.builtin.vars',
+    'systemd_sysusers_find_result')['files'] | flatten(levels=1) }}"
   loop_control:
-    label: "{{ item['path'] }}"
+    loop_var: "systemd_sysusers_create_file"
+    label: "{{ 'Remove ' + systemd_sysusers_create_file['path'] }}"
   when:
-    - "vars['sysusers_find_result']['files'] is defined"
+    - "lookup('ansible.builtin.vars', 'systemd_sysusers_find_result')['files']
+      is defined"

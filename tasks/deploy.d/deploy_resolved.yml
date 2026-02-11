@@ -17,8 +17,7 @@
     enabled: "yes"
   when:
     - "hostvars[inventory_hostname]['systemd_resolved'] |
-       community.general.json_query(vars['systemd_resolved_enable']) is defined"
-    - "hostvars[inventory_hostname]['systemd_resolved'] |
-       community.general.json_query(vars['systemd_resolved_enable']) == 'true'"
+       community.general.json_query(lookup('ansible.builtin.vars',
+       'systemd_resolved_enable', default='')) == 'true'"
   vars:
     systemd_resolved_enable: "[] | map(&enable || 'false', @) | [0]"

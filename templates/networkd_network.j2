@@ -3,11 +3,14 @@
 {{ '# Do not edit manually' }}
 
 {{ '[Match]' }}
-{% if item['match_override'] is defined and item['match_override'] != '' %}
+{% if item['match_override'] is defined and item['match_override']
+  not in ['', [], '[]', None] %}
 {% for m in item['match_override'] %}
-{% if (m.match_entry is defined and m.match_entry != '') and
-      (m.match_value is defined and m.match_value != '') %}
-{{ m.match_entry ~ '=' ~ m.match_value }}
+{% if (m.match_entry is defined and m['match_entry']
+  not in ['', [], '[]', None])
+  and (m.match_value is defined and m['match_value']
+  not in ['', [], '[]', None]) %}
+{{ m['match_entry'] ~ '=' ~ m['match_value'] }}
 {% endif %}
 {% endfor %}
 {% else %}
@@ -19,7 +22,8 @@
 {% endif %}
 {{ '' }}
 {% include 'networkd_network/networkd_network_generic.j2' %}
-{% if item['neighbors'] is defined and item['neighbors'] != '' %}
+{% if item['neighbors'] is defined and item['neighbors']
+  not in ['', [], '[]', None] %}
 {{ '' }}
 {% for ne in item['neighbors'] %}
 {% include 'networkd_network/networkd_network_neighbor.j2' %}
@@ -28,186 +32,212 @@
 {% endif %}
 {{ '' }}
 {% include 'networkd_network/networkd_network_link.j2' %}
-{% if item['ip'] is defined and item['ip'] != '' %}
+{% if item['ip'] is defined and item['ip'] not in ['', [], '[]', None] %}
 {{ '' }}
 {% for ip in item['ip'] %}
 {% include 'networkd_network/networkd_network_ip.j2' %}
 {% endfor %}
 {% endif %}
-{% if item['ip_rule'] is defined and item['ip_rule'] != '' %}
+{% if item['ip_rule'] is defined and item['ip_rule']
+  not in ['', [], '[]', None] %}
 {{ '' }}
 {% for ip in item['ip_rule'] %}
 {% include 'networkd_network/networkd_network_ip_rule.j2' %}
-{% if not loop.last %}
+{% if not loop['last'] %}
 {{ '' }}
 {% endif %}
 {% endfor %}
 {% endif %}
-{% if item['ip_route'] is defined and item['ip_route'] != '' %}
+{% if item['ip_route'] is defined and item['ip_route']
+  not in ['', [], '[]', None] %}
 {{ '' }}
 {% for ip in item['ip_route'] %}
 {% include 'networkd_network/networkd_network_ip_route.j2' %}
-{% if not loop.last %}
+{% if not loop['last'] %}
 {{ '' }}
 {% endif %}
 {% endfor %}
 {% endif %}
-{% if item['ip_next_hop'] is defined and item['ip_next_hop'] != '' %}
+{% if item['ip_next_hop'] is defined and item['ip_next_hop']
+  not in ['', [], '[]', None] %}
 {{ '' }}
 {% for ip in item['ip_next_hop'] %}
 {% include 'networkd_network/networkd_network_ip_next_hop.j2' %}
-{% if not loop.last %}
+{% if not loop['last'] %}
 {{ '' }}
 {% endif %}
 {% endfor %}
 {% endif %}
-{% if item['dhcp_client'] is defined and item['dhcp_client'] != '' %}
+{% if item['dhcp_client'] is defined and item['dhcp_client']
+  not in ['', [], '[]', None] %}
 {{ '' }}
 {% for d in item['dhcp_client'] %}
 {% include 'networkd_network/networkd_network_dhcp_client.j2' -%}
 {% endfor %}
 {% endif %}
-{% if item['dhcp_server'] is defined and item['dhcp_server'] != '' %}
+{% if item['dhcp_server'] is defined and item['dhcp_server']
+  not in ['', [], '[]', None] %}
 {{ '' }}
 {% for d in item['dhcp_server'] %}
 {% include 'networkd_network/networkd_network_dhcp_server.j2' %}
 {% endfor %}
 {% endif %}
-{% if item['bridge'] is defined and item['bridge'] != '' %}
+{% if item['bridge'] is defined and item['bridge']
+  not in ['', [], '[]', None] %}
 {{ '' }}
 {% for br in item['bridge'] %}
 {% include 'networkd_network/networkd_network_bridge.j2' %}
-{% if br.bridge_vlan is defined and br.bridge_vlan != '' %}
+{% if br['bridge_vlan'] is defined and br.bridge_vlan
+  not in ['', [], '[]', None] %}
 {{ '' }}
-{% for bv in br.bridge_vlan %}
+{% for bv in br['bridge_vlan'] %}
 {% include 'networkd_network/networkd_network_bridge_vlan.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
 {% endfor %}
 {% endif %}
-{% if item['qdisc'] is defined and item['qdisc'] != '' %}
+{% if item['qdisc'] is defined and item['qdisc'] not in ['', [], '[]', None] %}
 {% for bq in item['qdisc'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_drr_class'] is defined and item['qdisc_drr_class'] != '' %}
+{% if item['qdisc_drr_class'] is defined and item['qdisc_drr_class']
+  not in ['', [], '[]', None] %}
 {% for bdc in item['qdisc_drr_class'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_drr_class.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_htb'] is defined and item['qdisc_htb'] != '' %}
+{% if item['qdisc_htb'] is defined and item['qdisc_htb']
+  not in ['', [], '[]', None] %}
 {% for bh in item['qdisc_htb'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_htb.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_htb_class'] is defined and item['qdisc_htb_class'] != '' %}
+{% if item['qdisc_htb_class'] is defined and item['qdisc_htb_class']
+  not in ['', [], '[]', None] %}
 {% for bhc in item['qdisc_htb_class'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_htb_class.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_netem'] is defined and item['qdisc_netem'] != '' %}
+{% if item['qdisc_netem'] is defined and item['qdisc_netem']
+  not in ['', [], '[]', None] %}
 {% for bne in item['qdisc_netem'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_netem.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_tbf'] is defined and item['qdisc_tbf'] != '' %}
+{% if item['qdisc_tbf'] is defined and item['qdisc_tbf']
+  not in ['', [], '[]', None] %}
 {% for bt in item['qdisc_tbf'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_tbf.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_pie'] is defined and item['qdisc_pie'] != '' %}
+{% if item['qdisc_pie'] is defined and item['qdisc_pie']
+  not in ['', [], '[]', None] %}
 {% for bp in item['qdisc_pie'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_pie.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_sfb'] is defined and item['qdisc_sfb'] != '' %}
+{% if item['qdisc_sfb'] is defined and item['qdisc_sfb']
+  not in ['', [], '[]', None] %}
 {% for bsb in item['qdisc_sfb'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_sfb.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_sfq'] is defined and item['qdisc_sfq'] != '' %}
+{% if item['qdisc_sfq'] is defined and item['qdisc_sfq']
+  not in ['', [], '[]', None] %}
 {% for bsq in item['qdisc_sfq'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_sfq.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_bfifo'] is defined and item['qdisc_bfifo'] != '' %}
+{% if item['qdisc_bfifo'] is defined and item['qdisc_bfifo']
+  not in ['', [], '[]', None] %}
 {% for bb in item['qdisc_bfifo'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_bfifo.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_pfifo'] is defined and item['qdisc_pfifo'] != '' %}
+{% if item['qdisc_pfifo'] is defined and item['qdisc_pfifo']
+  not in ['', [], '[]', None] %}
 {% for bp in item['qdisc_pfifo'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_pfifo.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
 {% if item['qdisc_pfifo_head_drop'] is defined and
-  item['qdisc_pfifo_head_drop'] != '' %}
+  item['qdisc_pfifo_head_drop'] not in ['', [], '[]', None] %}
 {% for bph in item['qdisc_pfifo_head_drop'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_pfifo_head_drop.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_pfifo_fast'] is defined and item['qdisc_pfifo_fast'] != '' %}
+{% if item['qdisc_pfifo_fast'] is defined and item['qdisc_pfifo_fast']
+  not in ['', [], '[]', None] %}
 {% for bpf in item['qdisc_pfifo_fast'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_pfifo_fast.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_cake'] is defined and item['qdisc_cake'] != '' %}
+{% if item['qdisc_cake'] is defined and item['qdisc_cake']
+  not in ['', [], '[]', None] %}
 {% for bc in item['qdisc_cake'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_cake.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_codel'] is defined and item['qdisc_codel'] != '' %}
+{% if item['qdisc_codel'] is defined and item['qdisc_codel']
+  not in ['', [], '[]', None] %}
 {% for bcd in item['qdisc_codel'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_codel.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_drr'] is defined and item['qdisc_drr'] != '' %}
+{% if item['qdisc_drr'] is defined and item['qdisc_drr']
+  not in ['', [], '[]', None] %}
 {% for bd in item['qdisc_drr'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_drr.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_gred'] is defined and item['qdisc_gred'] != '' %}
+{% if item['qdisc_gred'] is defined and item['qdisc_gred']
+  not in ['', [], '[]', None] %}
 {% for bg in item['qdisc_gred'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_gred.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_fq_codel'] is defined and item['qdisc_fq_codel'] != '' %}
+{% if item['qdisc_fq_codel'] is defined and item['qdisc_fq_codel']
+  not in ['', [], '[]', None] %}
 {% for bfc in item['qdisc_fq_codel'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_fq_codel.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_fq'] is defined and item['qdisc_fq'] != '' %}
+{% if item['qdisc_fq'] is defined and item['qdisc_fq']
+  not in ['', [], '[]', None] %}
 {% for bfq in item['qdisc_fq'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_fq.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_teql'] is defined and item['qdisc_teql'] != '' %}
+{% if item['qdisc_teql'] is defined and item['qdisc_teql']
+  not in ['', [], '[]', None] %}
 {% for btq in item['qdisc_teql'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_teql.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item['qdisc_hhf'] is defined and item['qdisc_hhf'] != '' %}
+{% if item['qdisc_hhf'] is defined and item['qdisc_hhf']
+  not in ['', [], '[]', None] %}
 {% for bf in item['qdisc_hhf'] %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_hhf.j2' %}
 {{ '' }}

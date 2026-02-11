@@ -1,10 +1,11 @@
 {{ '[HeavyHitterFilter]' }}
-{% if bf.parent is defined and bf.parent != '' %}
-{{ 'Parent=' ~ bf.parent }}
+{% if bf['parent'] is defined and bf['parent'] not in ['', [], '[]', None] %}
+{{ 'Parent=' ~ bf['parent'] }}
 {% endif %}
-{% if bf.handle is defined and bf.handle != '' %}
-{{ 'Handle=' ~ bf.handle }}
+{% if bf['handle'] is defined and bf['handle'] not in ['', [], '[]', None] %}
+{{ 'Handle=' ~ bf['handle'] }}
 {% endif %}
-{% if bf.packet_limit is defined and bf.packet_limit != '' %}
-{{ 'PacketLimit=' ~ bf.packet_limit }}
+{% if bf['packet_limit'] is defined and bf['packet_limit']
+  not in ['', [], '[]', None] %}
+{{ 'PacketLimit=' ~ bf['packet_limit'] }}
 {% endif %}

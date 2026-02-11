@@ -1,31 +1,34 @@
 {{ '[HierarchyTokenBucketClass]' }}
-{% if bhc.parent is defined and bhc.parent != '' %}
-{{ 'Parent=' ~ bhc.parent }}
+{% if bhc['parent'] is defined and bhc['parent'] not in ['', [], '[]', None] %}
+{{ 'Parent=' ~ bhc['parent'] }}
 {% endif %}
-{% if bhc.classid is defined and bhc.classid != '' %}
-{{ 'ClassId=' ~ bhc.classid }}
+{% if bhc['classid'] is defined and bhc['classid']
+  not in ['', [], '[]', None] %}
+{{ 'ClassId=' ~ bhc['classid'] }}
 {% endif %}
-{% if bhc.prio is defined and bhc.prio != '' %}
-{{ 'Priority=' ~ bhc.prio }}
+{% if bhc['prio'] is defined and bhc['prio'] not in ['', [], '[]', None] %}
+{{ 'Priority=' ~ bhc['prio'] }}
 {% endif %}
-{% if bhc.quantum is defined and bhc.quantum != '' %}
-{{ 'QuantumBytes=' ~ bhc.quantum }}
+{% if bhc['quantum'] is defined and bhc['quantum']
+  not in ['', [], '[]', None] %}
+{{ 'QuantumBytes=' ~ bhc['quantum'] }}
 {% endif %}
-{% if bhc.mtu is defined and bhc.mtu != '' %}
-{{ 'MTUBytes=' ~ bhc.mtu }}
+{% if bhc['mtu'] is defined and bhc['mtu'] not in ['', [], '[]', None] %}
+{{ 'MTUBytes=' ~ bhc['mtu'] }}
 {% endif %}
-{% if bhc.overhead is defined and bhc.overhead != '' %}
-{{ 'OverheadBytes=' ~ bhc.overhead }}
+{% if bhc['overhead'] is defined and bhc['overhead']
+  not in ['', [], '[]', None] %}
+{{ 'OverheadBytes=' ~ bhc['overhead'] }}
 {% endif %}
-{% if bhc.rate is defined and bhc.rate != '' %}
-{{ 'Rate=' ~ bhc.rate }}
+{% if bhc['rate'] is defined and bhc['rate'] not in ['', [], '[]', None] %}
+{{ 'Rate=' ~ bhc['rate'] }}
 {% endif %}
-{% if bhc.ceil is defined and bhc.ceil != '' %}
-{{ 'CeilRate=' ~ bhc.ceil }}
+{% if bhc['ceil'] is defined and bhc['ceil'] not in ['', [], '[]', None] %}
+{{ 'CeilRate=' ~ bhc['ceil'] }}
 {% endif %}
-{% if bhc.burst is defined and bhc.burst != '' %}
-{{ 'BufferBytes=' ~ bhc.burst }}
+{% if bhc['burst'] is defined and bhc['burst'] not in ['', [], '[]', None] %}
+{{ 'BufferBytes=' ~ bhc['burst'] }}
 {% endif %}
-{% if bhc.cburst is defined and bhc.cburst != '' %}
-{{ 'CeilBufferBytes=' ~ bhc.cburst }}
+{% if bhc['cburst'] is defined and bhc['cburst'] not in ['', [], '[]', None] %}
+{{ 'CeilBufferBytes=' ~ bhc['cburst'] }}
 {% endif %}

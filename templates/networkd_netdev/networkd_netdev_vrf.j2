@@ -1,4 +1,4 @@
-{% if item['table'] is defined and item['table'] != '' %}
+{% if item['table'] is defined and item['table'] not in ['', [], '[]', None] %}
 {{ '[VRF]' }}
 {{ 'Table=' ~ item['table'] }}
 {% endif %}

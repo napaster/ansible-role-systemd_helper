@@ -1,10 +1,13 @@
 {{ '[DeficitRoundRobinSchedulerClass]' }}
-{% if bdc.parent is defined and bdc.parent != '' %}
-{{ 'Parent=' ~ bdc.parent }}
+{% if bdc['parent'] is defined and bdc['parent']
+  not in ['', [], '[]', None] %}
+{{ 'Parent=' ~ bdc['parent'] }}
 {% endif %}
-{% if bdc.classid is defined and bdc.classid != '' %}
-{{ 'ClassId=' ~ bdc.classid }}
+{% if bdc['classid'] is defined and bdc['classid']
+  not in ['', [], '[]', None] %}
+{{ 'ClassId=' ~ bdc['classid'] }}
 {% endif %}
-{% if bdc.quantum is defined and bdc.quantum != '' %}
-{{ 'Quantum=' ~ bdc.quantum }}
+{% if bdc['quantum'] is defined and bdc['quantum']
+  not in ['', [], '[]', None] %}
+{{ 'Quantum=' ~ bdc['quantum'] }}
 {% endif %}

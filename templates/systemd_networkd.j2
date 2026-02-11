@@ -2,14 +2,15 @@
 {{ '# ' + ansible_managed }}
 {{ '# Do not edit manually' }}
 
-{% for n in vars['systemd_networkd_networkd'] %}
-{% if n['network'] is defined and n['network'] != '' %}
+{% for n in lookup('ansible.builtin.vars', 'systemd_networkd_networkd') %}
+{% if n['network'] is defined and n['network'] not in ['', [], '[]', None] %}
 {{ '[Network]' }}
 {% for nn in n['network'] %}
 {% if nn['speed_meter'] is defined and nn['speed_meter'] in ['yes', 'no'] %}
 {{ 'SpeedMeter=' + nn['speed_meter'] }}
 {% endif %}
-{% if nn['speed_meter_interval'] is defined and nn['speed_meter_interval'] != '' %}
+{% if nn['speed_meter_interval'] is defined and
+  nn['speed_meter_interval'] not in ['', [], '[]', None] %}
 {{ 'SpeedMeterIntervalSec=' ~ nn['speed_meter_interval'] ~ 'sec' }}
 {% endif %}
 {% if nn['manage_foreign_routing_policy_rules'] is defined and
@@ -21,10 +22,11 @@
   nn['manage_foreign_routes'] in ['yes', 'no'] %}
 {{ 'ManageForeignRoutes=' + nn['manage_foreign_routes'] }}
 {% endif %}
-{% if nn['route_table'] is defined and nn['route_table'] != '' %}
+{% if nn['route_table'] is defined and nn['route_table']
+  not in ['', [], '[]', None] %}
 {% for nnt in nn['route_table'] %}
-{% if (nnt['name'] is defined and nnt['name'] != '') and
-  (nnt['id'] is defined and nnt['id'] != '' ) %}
+{% if (nnt['name'] is defined and nnt['name'] not in ['', [], '[]', None]) and
+  (nnt['id'] is defined and nnt['id'] not in ['', [], '[]', None] ) %}
 {{ 'RouteTable=' + nnt['name'] + ':' ~ nnt['id'] }}
 {% endif %}
 {% endfor %}
@@ -32,10 +34,11 @@
 {% endfor %}
 {% endif %}
 {{ '' }}
-{% if n['dhcp'] is defined and n['dhcp'] != '' %}
+{% if n['dhcp'] is defined and n['dhcp'] not in ['', [], '[]', None] %}
 {{ '[DHCP]' }}
 {% for nd in n['dhcp'] %}
-{% if nd['duid_type'] is defined and nd['duid_type'] != '' %}
+{% if nd['duid_type'] is defined and nd['duid_type']
+  not in ['', [], '[]', None] %}
 {% if nd['duid_type'] in ['vendor', 'uuid', 'link-layer'] %}
 {{ 'DUIDType=' + nd['duid_type'] }}
 {% elif nd['duid_type'] in 'link-layer-time' %}

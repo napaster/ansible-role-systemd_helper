@@ -1,12 +1,14 @@
 {{ '[Network]' }}
-{% if item['description'] is defined and item['description'] != '' %}
+{% if item['description'] is defined and item['description']
+  not in ['', [], '[]', None] %}
 {{ 'Description=' ~ item['description'] }}
 {% endif %}
 {% if item['dhcp'] is defined and item['dhcp'] in ['yes', 'no', 'ipv4',
   'ipv6'] %}
 {{ 'DHCP=' + item['dhcp'] }}
 {% endif %}
-{% if item['dhcp_server'] is defined and item['dhcp_server'] != '' %}
+{% if item['dhcp_server'] is defined and item['dhcp_server']
+  not in ['', [], '[]', None] %}
 {{ 'DHCPServer=yes' }}
 {% endif %}
 {% if item['link_local_adressing'] is defined and item['link_local_adressing']
@@ -21,10 +23,12 @@
   item['default_route_on_device'] in ['true', 'false'] %}
 {{ 'DefaultRouteOnDevice=' + item['default_route_on_device'] }}
 {% endif %}
-{% if item['ipv6_token'] is defined and item['ipv6_token'] != '' %}
+{% if item['ipv6_token'] is defined and item['ipv6_token']
+  not in ['', [], '[]', None] %}
 {{ 'IPv6Token=' ~ item['ipv6_token'] }}
 {% endif %}
-{% if item['ipv6_accept_ra'] is defined and item['ipv6_accept_ra'] in ['true', 'false'] %}
+{% if item['ipv6_accept_ra'] is defined and item['ipv6_accept_ra'] in
+  ['true', 'false'] %}
 {{ 'IPv6AcceptRA=' + item['ipv6_accept_ra'] }}
 {% endif %}
 {% if item['llmnr'] is defined and item['llmnr'] in ['true', 'false',
@@ -44,7 +48,7 @@
 {{ 'DNSSEC=' + item['dnssec'] }}
 {% endif %}
 {% if item['dnssec_negative_trust_anchors'] is defined and
-  item['dnssec_negative_trust_anchors'] != '' %}
+  item['dnssec_negative_trust_anchors'] not in ['', [], '[]', None] %}
 {{ 'DNSSECNegativeTrustAnchors=' ~ item['dnssec_negative_trust_anchors'] }}
 {% endif %}
 {% if item['lldp_receive'] is defined and item['lldp_receive'] in ['true',
@@ -55,14 +59,16 @@
   'false', 'nearest-bridge', 'non-tpmr-bridge', 'customer-bridge'] %}
 {{ 'EmitLLDP=' + item['lldp_transmit'] }}
 {% endif %}
-{% if item['bind_carrier'] is defined and item['bind_carrier'] != '' %}
+{% if item['bind_carrier'] is defined and item['bind_carrier']
+  not in ['', [], '[]', None] %}
 {% if item['bind_carrier'] is string %}
 {{ 'BindCarrier=' ~ item['bind_carrier'] }}
 {% elif item['bind_carrier'] is sequence %}
-{{ 'BindCarrier=' ~ item['bind_carrier'] | join(' ') }}
+{{ 'BindCarrier=' ~ (item['bind_carrier'] | join(' ')) }}
 {% endif %}
 {% endif %}
-{% if item['address'] is defined and item['address'] != '' %}
+{% if item['address'] is defined and item['address']
+  not in ['', [], '[]', None] %}
 {% if item['address'] is string and item['address'] |
   ansible.utils.ipaddr('host/prefix') %}
 {{ 'Address=' + item['address'] }}
@@ -78,7 +84,7 @@
   ansible.utils.ipaddr('host') %}
 {{ 'Gateway=' + item['gateway'] }}
 {% endif %}
-{% if item['dns'] is defined and item['dns'] != '' %}
+{% if item['dns'] is defined and item['dns'] not in ['', [], '[]', None] %}
 {% if item['dns'] is string and item['dns'] | ansible.utils.ipaddr('host') %}
 {{ 'DNS=' + item['dns'] }}
 {% elif item['dns'] is sequence %}
@@ -101,48 +107,52 @@
   'false'] %}
 {{ 'IPMasquerade=' + item['ip_masquerade'] }}
 {% endif %}
-{% if item['ntp'] is defined and item['ntp'] != '' %}
-{% if item['ntp'] is string and item['ntp'] != '' %}
+{% if item['ntp'] is defined and item['ntp'] not in ['', [], '[]', None] %}
+{% if item['ntp'] is string and item['ntp'] not in ['', [], '[]', None] %}
 {{ 'NTP=' + item['ntp'] }}
 {% elif item['ntp'] is sequence %}
 {% for addr in item['ntp'] %}
-{% if addr != '' %}
+{% if addr not in ['', [], '[]', None] %}
 {{ 'NTP=' + addr }}
 {% endif %}
 {% endfor %}
 {% endif %}
 {% endif %}
-{% if item['bond'] is defined and item['bond'] != '' %}
+{% if item['bond'] is defined and item['bond'] not in ['', [], '[]', None] %}
 {{ 'Bond=' ~ item['bond'] }}
 {% endif %}
-{% if item['bridge'] is defined and item['bridge'] != '' %}
+{% if item['bridge'] is defined and item['bridge']
+  not in ['', [], '[]', None] %}
 {% for br in item['bridge'] %}
-{% if br.name is defined and br.name != '' %}
+{% if br.name is defined and br.name not in ['', [], '[]', None] %}
 {{ 'Bridge=' ~ br.name }}
 {% endif %}
 {% endfor %}
 {% endif %}
-{% if item['vrf'] is defined and item['vrf'] != '' %}
+{% if item['vrf'] is defined and item['vrf'] not in ['', [], '[]', None] %}
 {{ 'VRF=' ~ item['vrf'] }}
 {% endif %}
-{% if item['vlans'] is defined and item['vlans'] != '' %}
+{% if item['vlans'] is defined and item['vlans'] not in ['', [], '[]', None] %}
 {% for v in item['vlans'] %}
 {{ 'VLAN=' ~ v.name }}
 {% endfor %}
 {% endif %}
-{% if item['ipvlans'] is defined and item['ipvlans'] != '' %}
+{% if item['ipvlans'] is defined and item['ipvlans']
+  not in ['', [], '[]', None] %}
 {% for ipv in item['ipvlans'] %}
 {{ 'IPVLAN=' ~ ipv.name }}
 {% endfor %}
 {% endif %}
-{% if item['macvlans'] is defined and item['macvlans'] != '' %}
+{% if item['macvlans'] is defined and item['macvlans']
+  not in ['', [], '[]', None] %}
 {% for mv in item['macvlans'] %}
-{% if mv.name is defined and mv.name != '' %}
+{% if mv.name is defined and mv.name not in ['', [], '[]', None] %}
 {{ 'MACVLAN=' ~ mv.name }}
 {% endif %}
 {% endfor %}
 {% endif %}
-{% if item['vxlans'] is defined and item['vxlans'] != '' %}
+{% if item['vxlans'] is defined and item['vxlans']
+  not in ['', [], '[]', None] %}
 {% for vx in item['vxlans'] %}
 {{ 'VXLAN=' ~ vx.name }}
 {% endfor %}

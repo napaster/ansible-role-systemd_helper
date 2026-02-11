@@ -9,7 +9,7 @@
 {{ '' }}
 {{ 'MACAddress=' ~ item['macaddr'] | ansible.utils.hwaddr('linux') -}}
 {% endif %}
-{% if item['mtu'] is defined and item['mtu'] != '' %}
+{% if item['mtu'] is defined and item['mtu'] not in ['', [], '[]', None] %}
 {{ '' }}
 {{ 'MTUBytes=' ~ item['mtu'] -}}
 {% endif %}
@@ -17,14 +17,16 @@
 {{ '\n' }}
 {% include 'networkd_netdev/networkd_netdev_vlan.j2' %}
 {% elif network_netdev_kind == 'bond' %}
-{% if item['bonding_options'] is defined and item['bonding_options'] != '' %}
+{% if item['bonding_options'] is defined and item['bonding_options']
+  not in ['', [], '[]', None] %}
 {% for b in item['bonding_options'] %}
 {{ '\n' }}
 {% include 'networkd_netdev/networkd_netdev_bond.j2' %}
 {% endfor %}
 {% endif %}
 {% elif network_netdev_kind == 'bridge' %}
-{% if item['bridging_opts'] is defined and item['bridging_opts'] != '' %}
+{% if item['bridging_opts'] is defined and item['bridging_opts']
+  not in ['', [], '[]', None] %}
 {% for br in item['bridging_opts'] %}
 {{ '\n' }}
 {% include 'networkd_netdev/networkd_netdev_bridge.j2' %}

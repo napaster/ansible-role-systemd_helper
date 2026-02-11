@@ -2,17 +2,26 @@
 - name: "systemd_helper | Stat systemd path"
   ansible.builtin.stat:
     path: "/etc/systemd"
-  register: "systemd_stat"
+  register: "systemd_helper_bin_stat"
 - name: "systemd_helper | Assert that systemd path exists"
   ansible.builtin.assert:
     that:
-      - "vars['systemd_stat']['stat']['exists'] == True"
+      - "lookup('ansible.builtin.vars',
+        'systemd_helper_bin_stat')['stat']['exists'] == True"
     fail_msg: "/etc/systemd not exists, something wrong with this system"
+    quiet: "true"
+- name: "systemd_helper | Assert that ansible facts gathered successfully"
+  ansible.builtin.assert:
+    that:
+      - "hostvars[inventory_hostname]['ansible_facts']['service_mgr'] is
+        defined"
+    fail_msg: "'ansible_facts' not found. Please enable facts gathering"
     quiet: "true"
 - name: "systemd_helper | Assert that system manager is systemd"
   ansible.builtin.assert:
     that:
-      - "hostvars[inventory_hostname]['ansible_service_mgr'] == 'systemd'"
+      - "hostvars[inventory_hostname]['ansible_facts']['service_mgr'] ==
+        'systemd'"
     fail_msg: "System manager is not systemd"
     quiet: "true"
 - name: "systemd_helper | Include prereq tasks for systemd-journald"
@@ -68,14 +77,11 @@
     file: "prereq.d/prereq_systemd_resolved.yml"
   when:
     - "hostvars[inventory_hostname]['systemd_resolved'] is defined"
-    - "hostvars[inventory_hostname]['systemd_resolved'] not in
-      ['', [], '[]', None]"
+    - "hostvars[inventory_hostname]['systemd_resolved']
+      not in ['', [], '[]', None]"
     - "hostvars[inventory_hostname]['systemd_resolved'] |
-      community.general.json_query(vars['systemd_resolved_make_link']) is
-      defined"
-    - "hostvars[inventory_hostname]['systemd_resolved'] |
-      community.general.json_query(vars['systemd_resolved_make_link']) ==
-      'true'"
+       community.general.json_query(lookup('ansible.builtin.vars',
+      'systemd_resolved_make_link', default='')) == 'true'"
   vars:
     systemd_resolved_make_link: "[] | map(&make_link || 'false', @) | [0]"
 - name: "systemd_helper | Include prereq tasks for systemd-networkd"

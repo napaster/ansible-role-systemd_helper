@@ -1,10 +1,11 @@
 {{ '[StochasticFairnessQueueing]' }}
-{% if bsq.parent is defined and bsq.parent != '' %}
-{{ 'Parent=' ~ bsq.parent }}
+{% if bsq['parent'] is defined and bsq['parent'] not in ['', [], '[]', None] %}
+{{ 'Parent=' ~ bsq['parent'] }}
 {% endif %}
-{% if bsq.handle is defined and bsq.handle != '' %}
-{{ 'Handle=' ~ bsq.handle }}
+{% if bsq['handle'] is defined and bsq['handle'] not in ['', [], '[]', None] %}
+{{ 'Handle=' ~ bsq['handle'] }}
 {% endif %}
-{% if bsq.perturb is defined and bsq.perturb != '' %}
-{{ 'PerturbPeriodSec=' ~ bsq.perturb }}
+{% if bsq['perturb'] is defined and bsq['perturb']
+  not in ['', [], '[]', None] %}
+{{ 'PerturbPeriodSec=' ~ bsq['perturb'] }}
 {% endif %}

@@ -24,41 +24,51 @@ import re
 import sys
 
 if len(sys.argv) < 2:
-    print >> sys.stderr, 'Usage: %s <rules file> [...]' % sys.argv[0]
+    print >> sys.stderr, "Usage: %s <rules file> [...]" % sys.argv[0]
     sys.exit(2)
 
-no_args_tests = re.compile('(ACTION|DEVPATH|KERNELS?|NAME|SYMLINK|SUBSYSTEMS?|DRIVERS?|TAG|RESULT|TEST)\s*(?:=|!)=\s*"([^"]*)"$')
-args_tests = re.compile('(ATTRS?|ENV|TEST){([a-zA-Z0-9/_.*%-]+)}\s*(?:=|!)=\s*"([^"]*)"$')
-no_args_assign = re.compile('(NAME|SYMLINK|OWNER|GROUP|MODE|TAG|PROGRAM|RUN|LABEL|GOTO|WAIT_FOR|OPTIONS|IMPORT)\s*(?:\+=|:=|=)\s*"([^"]*)"$')
+no_args_tests = re.compile(
+    '(ACTION|DEVPATH|KERNELS?|NAME|SYMLINK|SUBSYSTEMS?|DRIVERS?|TAG|RESULT|TEST)\s*(?:=|!)=\s*"([^"]*)"$'
+)
+args_tests = re.compile(
+    '(ATTRS?|ENV|TEST){([a-zA-Z0-9/_.*%-]+)}\s*(?:=|!)=\s*"([^"]*)"$'
+)
+no_args_assign = re.compile(
+    '(NAME|SYMLINK|OWNER|GROUP|MODE|TAG|PROGRAM|RUN|LABEL|GOTO|WAIT_FOR|OPTIONS|IMPORT)\s*(?:\+=|:=|=)\s*"([^"]*)"$'
+)
 args_assign = re.compile('(ATTR|ENV|IMPORT){([a-zA-Z0-9/_.*%-]+)}\s*=\s*"([^"]*)"$')
 
 result = 0
-buffer = ''
+buffer = ""
 for path in sys.argv[1:]:
     lineno = 0
     for line in open(path):
         lineno += 1
 
         # handle line continuation
-        if line.endswith('\\\n'):
+        if line.endswith("\\\n"):
             buffer += line[:-2]
             continue
         else:
             line = buffer + line
-            buffer = ''
+            buffer = ""
 
         # filter out comments and empty lines
         line = line.strip()
-        if not line or line.startswith('#'):
+        if not line or line.startswith("#"):
             continue
 
-        for clause in line.split(','):
+        for clause in line.split(","):
             clause = clause.strip()
-            if not (no_args_tests.match(clause) or args_tests.match(clause) or
-                    no_args_assign.match(clause) or args_assign.match(clause)):
+            if not (
+                no_args_tests.match(clause)
+                or args_tests.match(clause)
+                or no_args_assign.match(clause)
+                or args_assign.match(clause)
+            ):
 
-                print('Invalid line %s:%i: %s' % (path, lineno, line))
-                print('  clause:', clause)
+                print("Invalid line %s:%i: %s" % (path, lineno, line))
+                print("  clause:", clause)
                 print()
                 result = 1
                 break

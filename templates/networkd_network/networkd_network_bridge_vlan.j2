@@ -1,10 +1,11 @@
 {{ '[BridgeVLAN]' }}
-{% if bv.vlan is defined and bv.vlan != '' %}
-{{ 'VLAN=' ~ bv.vlan }}
+{% if bv['vlan'] is defined and bv['vlan'] not in ['', [], '[]', None] %}
+{{ 'VLAN=' ~ bv['vlan'] }}
 {% endif %}
-{% if bv.egress_untagged is defined and bv.egress_untagged != '' %}
-{{ 'EgressUntagged=' ~ bv.egress_untagged }}
+{% if bv['egress_untagged'] is defined and bv['egress_untagged']
+  not in ['', [], '[]', None] %}
+{{ 'EgressUntagged=' ~ bv['egress_untagged'] }}
 {% endif %}
-{% if bv.pvid is defined and bv.pvid != '' %}
-{{ 'PVID=' ~ bv.pvid }}
+{% if bv['pvid'] is defined and bv['pvid'] not in ['', [], '[]', None] %}
+{{ 'PVID=' ~ bv['pvid'] }}
 {% endif %}

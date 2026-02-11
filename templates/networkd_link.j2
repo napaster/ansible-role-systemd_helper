@@ -3,11 +3,14 @@
 {{ '# Do not edit manually' }}
 
 {{ '[Match]' }}
-{% if item['match_override'] is defined and item['match_override'] != '' %}
+{% if item['match_override'] is defined and item['match_override']
+  not in ['', [], '[]', None] %}
 {% for m in item['match_override'] %}
-{% if (m.match_entry is defined and m.match_entry != '') and
-  (m.match_value is defined and m.match_value != '') %}
-{{ m.match_entry ~ '=' ~ m.match_value }}
+{% if (m.match_entry is defined and m['match_entry']
+  not in ['', [], '[]', None]) and
+  (m.match_value is defined and m['match_value']
+  not in ['', [], '[]', None]) %}
+{{ m['match_entry'] ~ '=' ~ m['match_value'] }}
 {% endif %}
 {% endfor %}
 {% else %}
@@ -15,22 +18,24 @@
   'macvlan'] %}
 {{ 'OriginalName=' + network_netdev_name }}
 {% else %}
-{{ 'MACAddress=' + item['physaddr'] | ansible.utils.hwaddr('linux') }}
+{{ 'MACAddress=' + (item['physaddr'] | ansible.utils.hwaddr('linux')) }}
 {% endif %}
 {% endif %}
 {{ '' }}
 {{ '[Link]' }}
 {% if network_netdev_kind is defined and network_netdev_kind !=
   ['vlan', 'macvlan'] %}
-{% if (item['match_override'] is defined and item['match_override'] == '') or
-  (item['match_override'] is not defined) %}
+{% if (item['match_override'] is defined and
+  item['match_override'] in ['', [], '[]', None]) or item['match_override'] is
+  not defined %}
 {{ 'Name=' ~ network_netdev_name }}
 {% endif %}
 {% endif %}
-{% if item['description'] is defined and item['description'] != '' %}
+{% if item['description'] is defined and item['description']
+  not in ['', [], '[]', None] %}
 {{ 'Description=' ~ item['description'] }}
 {% endif %}
-{% if item['alias'] is defined and item['alias'] != '' %}
+{% if item['alias'] is defined and item['alias'] not in ['', [], '[]', None] %}
 {{ 'Alias=' ~ item['alias'] }}
 {% endif %}
 {% if item['macaddr_policy'] is defined and item['macaddr_policy'] in
@@ -42,9 +47,10 @@
 {% endif %}
 {% if item['altname_policy'] is defined and item['altname_policy'] in
   ['database', 'onboard', 'slot', 'path', 'mac'] %}
-{{ 'AlternativeNamesPolicy=' + item['altname_policy'] | join(' ') }}
+{{ 'AlternativeNamesPolicy=' + (item['altname_policy'] | join(' ')) }}
 {% endif %}
-{% if item['altname'] is defined and item['altname'] != '' %}
+{% if item['altname'] is defined and item['altname']
+  not in ['', [], '[]', None] %}
 {% if item['altname'] is string %}
 {{ 'AlternativeName=' + item['altname'] }}
 {% elif item['altname'] is sequence %}
@@ -53,13 +59,14 @@
 {% endfor %}
 {% endif %}
 {% endif %}
-{% if item['txqueuelen'] is defined and item['txqueuelen'] != '' %}
+{% if item['txqueuelen'] is defined and item['txqueuelen']
+  not in ['', [], '[]', None] %}
 {{ 'TransmitQueueLength=' ~ item['txqueuelen'] }}
 {% endif %}
-{% if item['mtu'] is defined and item['mtu'] != '' %}
+{% if item['mtu'] is defined and item['mtu'] not in ['', [], '[]', None] %}
 {{ 'MTUBytes=' ~ item['mtu'] }}
 {% endif %}
-{% if item['speed'] is defined and item['speed'] != '' %}
+{% if item['speed'] is defined and item['speed'] not in ['', [], '[]', None] %}
 {{ 'BitsPerSecond=' ~ item['speed'] }}
 {% endif %}
 {% if item['duplex'] is defined and item['duplex'] in ['half', 'full'] %}
@@ -76,7 +83,8 @@
   'fiber'] %}
 {{ 'Port=' + item['port'] }}
 {% endif %}
-{% if item['negotiation'] is defined and item['negotiation'] != '' %}
+{% if item['negotiation'] is defined and item['negotiation']
+  not in ['', [], '[]', None] %}
 {{ 'Advertise=' + item['negotiation'] }}
 {% endif %}
 {% if item['eth_rx'] is defined and item['eth_rx'] in ['true', 'false'] %}
@@ -120,24 +128,28 @@
   item['eth_rx_ntuple_filter'] in ['true', 'false'] %}
 {{ 'NTupleFilter=' + item['eth_rx_ntuple_filter'] }}
 {% endif %}
-{% if item['eth_rx_channels'] is defined and item['eth_rx_channels'] != '' %}
+{% if item['eth_rx_channels'] is defined and item['eth_rx_channels']
+  not in ['', [], '[]', None] %}
 {{ 'RxChannels=' ~ item['eth_rx_channels'] }}
 {% endif %}
-{% if item['eth_tx_channels'] is defined and item['eth_tx_channels'] != '' %}
+{% if item['eth_tx_channels'] is defined and item['eth_tx_channels']
+  not in ['', [], '[]', None] %}
 {{ 'TxChannels=' ~ item['eth_tx_channels'] }}
 {% endif %}
 {% if item['eth_other_channels'] is defined and
-  item['eth_other_channels'] != '' %}
+  item['eth_other_channels'] not in ['', [], '[]', None] %}
 {{ 'OtherChannels=' ~ item['eth_other_channels'] }}
 {% endif %}
 {% if item['eth_combined_channels'] is defined and
-  item['eth_combined_channels'] != '' %}
+  item['eth_combined_channels'] not in ['', [], '[]', None] %}
 {{ 'CombinedChannels=' ~ item['eth_combined_channels'] }}
 {% endif %}
-{% if item['eth_rx_ring'] is defined and item['eth_rx_ring'] != '' %}
+{% if item['eth_rx_ring'] is defined and item['eth_rx_ring']
+  not in ['', [], '[]', None] %}
 {{ 'RxBufferSize=' ~ item['eth_rx_ring'] }}
 {% endif %}
-{% if item['eth_tx_ring'] is defined and item['eth_tx_ring'] != '' %}
+{% if item['eth_tx_ring'] is defined and item['eth_tx_ring']
+  not in ['', [], '[]', None] %}
 {{ 'TxBufferSize=' ~ item['eth_tx_ring'] }}
 {% endif %}
 {% if item['eth_rx_flow'] is defined and item['eth_rx_flow'] in

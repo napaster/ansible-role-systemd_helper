@@ -19,9 +19,9 @@
   ['true', 'false'] %}
 {{ 'VNetHeader=' + item['vnet_header'] }}
 {% endif %}
-{% if item['user'] is defined and item['user'] != '' %}
+{% if item['user'] is defined and item['user'] not in ['', [], '[]', None] %}
 {{ 'User=' + item['user'] }}
 {% endif %}
-{% if item['group'] is defined and item['group'] != '' %}
+{% if item['group'] is defined and item['group'] not in ['', [], '[]', None] %}
 {{ 'Group=' + item['group'] }}
 {% endif %}

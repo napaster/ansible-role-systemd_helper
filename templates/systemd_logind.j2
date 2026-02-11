@@ -2,8 +2,8 @@
 {{ '# ' + ansible_managed }}
 {{ '# Do not edit manually' }}
 
-{% for l in vars['systemd_logind_logind'] %}
-{% if l['logind'] is defined and l['logind'] != '' %}
+{% for l in lookup('ansible.builtin.vars', 'systemd_logind_logind') %}
+{% if l['logind'] is defined and l['logind'] not in ['', [], '[]', None] %}
 {% set systemd_logind_handle_values = ['ignore', 'poweroff', 'reboot', 'halt',
   'kexec', 'suspend', 'hibernate', 'hybrid-sleep', 'suspend-then-hibernate',
   'lock', 'factory-reset'] %}

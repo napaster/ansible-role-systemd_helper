@@ -15,10 +15,7 @@
     enabled: "yes"
   when:
     - "hostvars[inventory_hostname]['systemd_timesyncd'] |
-       community.general.json_query(vars['systemd_timesyncd_enable']) is
-       defined"
-    - "hostvars[inventory_hostname]['systemd_timesyncd'] |
-       community.general.json_query(vars['systemd_timesyncd_enable']) ==
-       'true'"
+       community.general.json_query(lookup('ansible.builtin.vars',
+       'systemd_timesyncd_enable', default='')) == 'true'"
   vars:
     systemd_timesyncd_enable: "[] | map(&enable || 'false', @) | [0]"

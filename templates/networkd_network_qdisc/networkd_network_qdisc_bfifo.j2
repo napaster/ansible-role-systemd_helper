@@ -1,10 +1,11 @@
 {{ '[BFIFO]' }}
-{% if bb.parent is defined and bb.parent != '' %}
-{{ 'Parent=' ~ bb.parent }}
+{% if bb['parent'] is defined and bb['parent'] not in ['', [], '[]', None] %}
+{{ 'Parent=' ~ bb['parent'] }}
 {% endif %}
-{% if bb.handle is defined and bb.handle != '' %}
-{{ 'Handle=' ~ bb.handle }}
+{% if bb['handle'] is defined and bb['handle'] not in ['', [], '[]', None] %}
+{{ 'Handle=' ~ bb['handle'] }}
 {% endif %}
-{% if bb.limit_size is defined and bb.limit_size != '' %}
-{{ 'LimitSize=' ~ bb.limit_size }}
+{% if bb['limit_size'] is defined and bb['limit_size']
+  not in ['', [], '[]', None] %}
+{{ 'LimitSize=' ~ bb['limit_size'] }}
 {% endif %}

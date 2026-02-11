@@ -9,6 +9,8 @@
       community.general.json_query('[].timesyncd[]') }}"
 - name: "systemd_helper | Set timezone"
   community.general.timezone:
-    name: "{{ vars['systemd_timedatectl_timezone'] | join() }}"
+    name: "{{ lookup('ansible.builtin.vars', 'systemd_timedatectl_timezone') |
+      join() }}"
   when:
-    - "vars['systemd_timedatectl_timezone'] not in ['', [], '[]', None]"
+    - "lookup('ansible.builtin.vars', 'systemd_timedatectl_timezone')
+      not in ['', [], '[]', None]"

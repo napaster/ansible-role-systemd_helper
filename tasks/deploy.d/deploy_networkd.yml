@@ -15,8 +15,7 @@
     enabled: "yes"
   when:
     - "hostvars[inventory_hostname]['systemd_networkd'] |
-       community.general.json_query(vars['systemd_networkd_enable']) is defined"
-    - "hostvars[inventory_hostname]['systemd_networkd'] |
-       community.general.json_query(vars['systemd_networkd_enable']) == 'true'"
+       community.general.json_query(lookup('ansible.builtin.vars',
+       'systemd_networkd_enable', default='')) == 'true'"
   vars:
     systemd_networkd_enable: "[] | map(&enable || 'false', @) | [0]"

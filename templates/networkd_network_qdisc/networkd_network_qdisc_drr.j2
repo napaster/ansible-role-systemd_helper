@@ -1,7 +1,7 @@
 {{ '[DeficitRoundRobinScheduler]' }}
-{% if bd.parent is defined and bd.parent != '' %}
-{{ 'Parent=' ~ bd.parent }}
+{% if bd['parent'] is defined and bd['parent'] not in ['', [], '[]', None] %}
+{{ 'Parent=' ~ bd['parent'] }}
 {% endif %}
-{% if bd.handle is defined and bd.handle != '' %}
-{{ 'Handle=' ~ bd.handle }}
+{% if bd['handle'] is defined and bd['handle'] not in ['', [], '[]', None] %}
+{{ 'Handle=' ~ bd['handle'] }}
 {% endif %}

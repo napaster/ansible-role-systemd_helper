@@ -1,10 +1,11 @@
 {{ '[PFIFOHeadDrop]' }}
-{% if bph.parent is defined and bph.parent != '' %}
-{{ 'Parent=' ~ bph.parent }}
+{% if bph['parent'] is defined and bph['parent'] not in ['', [], '[]', None] %}
+{{ 'Parent=' ~ bph['parent'] }}
 {% endif %}
-{% if bph.handle is defined and bph.handle != '' %}
-{{ 'Handle=' ~ bph.handle }}
+{% if bph['handle'] is defined and bph['handle'] not in ['', [], '[]', None] %}
+{{ 'Handle=' ~ bph['handle'] }}
 {% endif %}
-{% if bph.packet_limit is defined and bph.packet_limit != '' %}
-{{ 'PacketLimit=' ~ bph.packet_limit }}
+{% if bph['packet_limit'] is defined and bph['packet_limit']
+  not in ['', [], '[]', None] %}
+{{ 'PacketLimit=' ~ bph['packet_limit'] }}
 {% endif %}
