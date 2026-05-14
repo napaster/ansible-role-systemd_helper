@@ -14,6 +14,9 @@
 {% if ip['table'] is defined and ip['table'] not in ['', [], '[]', None] %}
 {{ 'Table=' ~ ip['table'] }}
 {% endif %}
+{% if ip['type'] is defined and ip['type'] in ['blackhole', 'unreachable', 'prohibit'] %}
+{{ 'Type=' ~ ip['type'] }}
+{% endif %}
 {% if ip['prio'] is defined and ip['prio'] not in ['', [], '[]', None] %}
 {{ 'Priority=' ~ ip['prio'] }}
 {% endif %}
