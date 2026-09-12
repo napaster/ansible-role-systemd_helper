@@ -67,6 +67,35 @@ just need simple dhcp on ethernet interfaces you can define simple
           match_value: 'e*' # <--- any linux `ens*/enp*/eth*` device
   ```
 
+### Unit drop-ins (`systemd_dropins`)
+
+Generic drop-ins for **any** unit, including units the role does not otherwise
+manage. Renders `/etc/systemd/system/<unit>.d/<name>.conf` and notifies
+`daemon-reload`.
+
+Use it when a packaged unit needs a local tweak that must survive package
+upgrades — editing the shipped unit does not.
+
+```yaml
+systemd_dropins:
+  - unit: 'iptables.service'
+    name: 'restart-docker'
+    content: |
+      [Service]
+      # iptables-restore wipes the DOCKER* chains the daemon creates at start,
+      # so containers keep running but lose port publishing and outbound.
+      # try-restart is a no-op when docker is down; --no-block avoids a
+      # deadlock inside the same systemd transaction; the leading '-' keeps a
+      # failed docker restart from failing the firewall itself.
+      ExecStartPost=-/usr/bin/systemctl --no-block try-restart docker.service
+```
+
+| key | meaning |
+|---|---|
+| `unit` | full unit name with suffix, e.g. `iptables.service` |
+| `name` | drop-in file name without `.conf` |
+| `content` | drop-in body as-is, sections included |
+
 ## Example configuration
 
 ```yaml

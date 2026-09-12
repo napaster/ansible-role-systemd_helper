@@ -1,0 +1,5 @@
+{{ '## ' + item['unit'] + '.d/' + item['name'] + '.conf' }}
+{{ '# ' + ansible_managed }}
+{{ '# Do not edit manually' }}
+
+{{ item['content'] | trim }}

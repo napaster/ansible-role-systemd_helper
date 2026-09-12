@@ -1,5 +1,6 @@
 ---
 systemd_tmpfiles: []
+systemd_dropins: []
 systemd_timesyncd: []
 systemd_journald_settings: []
 systemd_udev: []

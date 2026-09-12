@@ -51,3 +51,7 @@
       'systemd_networkd_restart', default='')) == 'true'"
   vars:
     systemd_networkd_restart: "[] | map(&restart || 'false', @) | [0]"
+- name: "systemd_helper | Reload systemd daemon"
+  ansible.builtin.systemd:
+    daemon_reload: "true"
+  listen: "Reload systemd daemon"
