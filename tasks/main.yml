@@ -34,6 +34,12 @@
     - "hostvars[inventory_hostname]['systemd_vconsole'] is defined"
     - "hostvars[inventory_hostname]['systemd_vconsole'] not in
       ['', [], '[]', None]"
+- name: "systemd_helper | Include deploy tasks for unit drop-ins"
+  ansible.builtin.include_tasks:
+    file: "deploy.d/deploy_dropins.yml"
+  when:
+    - "lookup('ansible.builtin.vars', 'systemd_dropins', default='')
+      not in ['', [], '[]', None]"
 - name: "systemd_helper | Include deploy tasks for systemd-tmpfiles"
   ansible.builtin.import_tasks:
     file: "exec.d/tmpfiles_executor.yml"

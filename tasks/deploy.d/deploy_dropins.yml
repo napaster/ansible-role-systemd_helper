@@ -1,0 +1,25 @@
+---
+- name: "systemd_helper | Ensure drop-in directories exist"
+  ansible.builtin.file:
+    path: "{{ '/etc/systemd/system/' ~ item['unit'] ~ '.d' }}"
+    state: "directory"
+    group: "root"
+    owner: "root"
+    mode: "0755"
+  loop: "{{ hostvars[inventory_hostname]['systemd_dropins'] }}"
+  loop_control:
+    label: "{{ item['unit'] }}"
+- name: "systemd_helper | Deploy unit drop-ins"
+  ansible.builtin.template:
+    src: "systemd_dropin.j2"
+    dest: "{{ '/etc/systemd/system/' ~ item['unit'] ~ '.d/' ~ item['name'] ~
+      '.conf' }}"
+    group: "root"
+    owner: "root"
+    mode: "0644"
+    force: "yes"
+  loop: "{{ hostvars[inventory_hostname]['systemd_dropins'] }}"
+  loop_control:
+    label: "{{ item['unit'] ~ ' / ' ~ item['name'] }}"
+  notify:
+    - "Reload systemd daemon"
