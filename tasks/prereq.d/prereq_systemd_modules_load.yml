@@ -32,8 +32,10 @@
     systemd_modules_load_drop_exists: "[] | map(&drop_exists || 'false', @) |
       [0]"
     systemd_helper_exclude_modules_load_create:
-      "{{ lookup('ansible.builtin.vars', 'systemd_modules_load_create',
-      default=[]) | map('regex_replace', '^(.*)$', '\\1.conf') | list() }}"
+      "{{ (lookup('ansible.builtin.vars', 'systemd_modules_load_create',
+      default=[]) | map('regex_replace', '^(.*)$', '\\1.conf') | list()) +
+      (lookup('ansible.builtin.vars', 'systemd_modules_load_preserve',
+      default=[]) | list()) }}"
 - name: "systemd_helper | Delete exists modules-load configuration files"
   ansible.builtin.file:
     path: "{{ systemd_modules_load_file['path'] }}"

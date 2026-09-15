@@ -7,3 +7,6 @@ systemd_udev: []
 systemd_vconsole: []
 systemd_resolved: []
 systemd_networkd: []
+# Basenames of '/etc/modules-load.d/*.conf' files that must survive
+# 'drop_exists', because they are owned by another role.
+systemd_modules_load_preserve: []
