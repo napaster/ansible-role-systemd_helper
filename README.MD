@@ -214,6 +214,8 @@ systemd_sysusers:
 
 systemd_modules_load:
 # This option allow to delete '/etc/modules-load.d/*.conf' files before deploy.
+# Files listed in 'systemd_modules_load_preserve' are kept, everything else
+# that is not declared below is removed.
 - drop_exists: 'true'
   modules_load:
   - file_name: '99-ipvs'
@@ -223,6 +225,12 @@ systemd_modules_load:
   - file_name: 'facebook'
     modules:
     - 'tls'
+
+# Names of '/etc/modules-load.d/*.conf' files that 'drop_exists' must not
+# remove, for cases where another role owns the file. Matched the same way as
+# the generated names, i.e. as regular expressions against the file name.
+systemd_modules_load_preserve:
+- 'ipmi.conf'
 
 systemd_timesyncd:
 # Enable systemd-timesyncd or not.
