@@ -6,6 +6,15 @@ systemd_journald_settings: []
 systemd_udev: []
 systemd_vconsole: []
 systemd_resolved: []
+# true — замаскировать systemd-resolved и не включать/не перезапускать его,
+# что бы ни стояло в systemd_resolved. Для хостов со своим DNS на :53 (unbound):
+# systemd 262 поднимает выключенный resolved, он занимает :53, unbound не стартует.
+systemd_resolved_mask: false
+# При маске /etc/resolv.conf, если он ссылка на файл resolved в /run, заменяется
+# обычным файлом с этим адресом (после перезагрузки ссылка повиснет).
+systemd_resolved_mask_nameserver: '127.0.0.1'
+# Необязательная строка search в этом файле (например ['blackhole.vc']).
+systemd_resolved_mask_search: []
 systemd_networkd: []
 # Basenames of '/etc/modules-load.d/*.conf' files that must survive
 # 'drop_exists', because they are owned by another role.

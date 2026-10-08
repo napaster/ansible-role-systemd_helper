@@ -76,6 +76,7 @@
   ansible.builtin.include_tasks:
     file: "prereq.d/prereq_systemd_resolved.yml"
   when:
+    - "not (systemd_resolved_mask | bool)"
     - "hostvars[inventory_hostname]['systemd_resolved'] is defined"
     - "hostvars[inventory_hostname]['systemd_resolved']
       not in ['', [], '[]', None]"
