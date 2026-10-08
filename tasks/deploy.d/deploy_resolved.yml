@@ -11,11 +11,45 @@
     - "Restart systemd-resolved"
 - name: "systemd_helper | Flush handlers"
   ansible.builtin.meta: "flush_handlers"
+- name: "systemd_helper | Mask systemd-resolved service"
+  ansible.builtin.systemd:
+    name: "systemd-resolved"
+    state: "stopped"
+    enabled: "no"
+    masked: "yes"
+  when: "systemd_resolved_mask | bool"
+- name: "systemd_helper | Stat resolv.conf for masked resolved"
+  ansible.builtin.stat:
+    path: "/etc/resolv.conf"
+  register: "systemd_resolv_mask_stat"
+  when: "systemd_resolved_mask | bool"
+- name: "systemd_helper | Replace resolved symlink with static resolv.conf"
+  when:
+    - "systemd_resolved_mask | bool"
+    - "systemd_resolv_mask_stat.stat.islnk | default(false)"
+    - "'/systemd/resolve/' in (systemd_resolv_mask_stat.stat.lnk_target | default(''))"
+  block:
+    - name: "systemd_helper | Remove resolved resolv.conf symlink"
+      ansible.builtin.file:
+        path: "/etc/resolv.conf"
+        state: "absent"
+    - name: "systemd_helper | Write static resolv.conf"
+      ansible.builtin.copy:
+        dest: "/etc/resolv.conf"
+        content: |
+          nameserver {{ systemd_resolved_mask_nameserver }}
+          {% if systemd_resolved_mask_search | length > 0 %}
+          search {{ systemd_resolved_mask_search | join(' ') }}
+          {% endif %}
+        owner: "root"
+        group: "root"
+        mode: "0644"
 - name: "systemd_helper | Enable systemd-resolved service"
   ansible.builtin.systemd:
     name: "systemd-resolved"
     enabled: "yes"
   when:
+    - "not (systemd_resolved_mask | bool)"
     - "hostvars[inventory_hostname]['systemd_resolved'] |
        community.general.json_query(lookup('ansible.builtin.vars',
        'systemd_resolved_enable', default='')) == 'true'"

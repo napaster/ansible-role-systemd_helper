@@ -29,6 +29,7 @@
     state: "restarted"
   listen: "Restart systemd-resolved"
   when:
+    - "not (systemd_resolved_mask | bool)"
     - "hostvars[inventory_hostname]['systemd_resolved'] is defined"
     - "hostvars[inventory_hostname]['systemd_resolved']
       not in ['', [], '[]', None]"
